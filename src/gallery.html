@@ -30,6 +30,7 @@ a
 #configpanel {
     padding: 30px;
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 #pluspanel {
@@ -44,13 +45,14 @@ function add_script_ref(src) {
     node.type = 'text/javascript';
     document.getElementsByTagName('head')[0].appendChild(node);
 }
-var url_parts = document.URL.split("/")
-var baseurl = url_parts.splice(0,url_parts.length-1).join("/")
-add_script_ref(baseurl+'/VK.js');
-add_script_ref(baseurl+'/qilvgallery.js');
+var url_parts = document.URL.split("gallery.html")
+var prefix_url = url_parts[0];
+var suffix_url = url_parts[1];
+add_script_ref(prefix_url+'VK.js'+suffix_url);
+add_script_ref(prefix_url+'qilvgallery.js'+suffix_url);
 
 jQuery(function($){
-    var mainurl = baseurl + "/gallery.js";
+    var mainurl = prefix_url + "gallery.js" + suffix_url;
     var setlink = function(keyboard_config) {
         var keystring = "";
         if (keyboard_config != undefined) 
@@ -70,7 +72,7 @@ jQuery(function($){
             });
             keystring += "};";
         }
-        $('#gallery_link').attr('href',"javascript:(function(){if(window.QILVGallery_overlays){window.QILVGallery_overlays.current.show();}else{gallery_script={};gallery_script.s=document.createElement('script');window.qilvbaseurl='"+baseurl+"';gallery_script.s.src='"+mainurl+"';"+keystring+"document.getElementsByTagName('head')[0].appendChild(gallery_script.s);}})();");
+        $('#gallery_link').attr('href',"javascript:(function(){if(window.QILVGallery_overlays){window.QILVGallery_overlays.current.show();}else{gallery_script={};gallery_script.s=document.createElement('script');window.qilv_prefix='"+prefix_url+"';window.qilv_suffix='"+suffix_url+"';gallery_script.s.src='"+mainurl+"';"+keystring+"document.getElementsByTagName('head')[0].appendChild(gallery_script.s);}})();");
     }
     var setlink_using_param = function() {
         var config = {};
@@ -136,9 +138,7 @@ jQuery.noConflict();
 </script>
 </head>
 <body>
+<a id='gallery_link' class='link'>Gallery</a>
 <div id='configpanel'></div>
-<a id='gallery_link' class='link'>
-Gallery
-</a>
 </body>
 </html>

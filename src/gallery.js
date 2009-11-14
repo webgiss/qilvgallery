@@ -21,8 +21,8 @@
     
     var jquery_version = "1.3";
     add_script_ref('http://ajax.googleapis.com/ajax/libs/jquery/' + jquery_version + '/jquery.min.js');
-    add_script_ref(window.qilvbaseurl+'/VK.js');
-    add_script_ref(window.qilvbaseurl+'/qilvgallery.js');
+    add_script_ref(window.qilv_prefix+'VK.js'+window.qilv_suffix);
+    add_script_ref(window.qilv_prefix+'qilvgallery.js'+window.qilv_suffix);
     add_script_content("window.QILVGallery_overlays.init();");
     if (window.GM_values == undefined)
     {

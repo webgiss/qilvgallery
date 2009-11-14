@@ -38,8 +38,19 @@ a
 
 </style>
 <script type='text/javascript'>
+function add_script_ref(src) {
+    var node = document.createElement('script');
+    node.src = src;
+    node.type = 'text/javascript';
+    document.getElementsByTagName('head')[0].appendChild(node);
+}
+var url_parts = document.URL.split("/")
+var baseurl = url_parts.splice(0,url_parts.length-1).join("/")
+add_script_ref(baseurl+'/VK.js');
+add_script_ref(baseurl+'/qilvgallery.js');
+
 jQuery(function($){
-    var mainurl = "http://qilvgallery.googlecode.com/hg/src/gallery.js";
+    var mainurl = baseurl + "/gallery.js";
     var setlink = function(keyboard_config) {
         var keystring = "";
         if (keyboard_config != undefined) 
@@ -59,7 +70,7 @@ jQuery(function($){
             });
             keystring += "};";
         }
-        $('#gallery_link').attr('href',"javascript:(function(){if(window.QILVGallery_overlays){window.QILVGallery_overlays.current.show();}else{gallery_script={};gallery_script.s=document.createElement('script');gallery_script.s.src='"+mainurl+"';"+keystring+"document.getElementsByTagName('head')[0].appendChild(gallery_script.s);}})();");
+        $('#gallery_link').attr('href',"javascript:(function(){if(window.QILVGallery_overlays){window.QILVGallery_overlays.current.show();}else{gallery_script={};gallery_script.s=document.createElement('script');window.qilvbaseurl='"+baseurl+"';gallery_script.s.src='"+mainurl+"';"+keystring+"document.getElementsByTagName('head')[0].appendChild(gallery_script.s);}})();");
     }
     var setlink_using_param = function() {
         var config = {};

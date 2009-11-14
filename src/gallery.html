@@ -39,6 +39,7 @@ a
 </style>
 <script type='text/javascript'>
 jQuery(function($){
+    var mainurl = "http://qilvgallery.googlecode.com/hg/src/gallery.js";
     var setlink = function(keyboard_config) {
         var keystring = "";
         if (keyboard_config != undefined) 
@@ -58,7 +59,7 @@ jQuery(function($){
             });
             keystring += "};";
         }
-        $('#gallery_link').attr('href',"javascript:(function(){if(window.QILVGallery_overlays){window.QILVGallery_overlays.current.show();}else{gallery_script={};gallery_script.s=document.createElement('script');gallery_script.s.src='http://dl.dropbox.com/u/394017/api/gallery/gallerydev.js';"+keystring+"document.getElementsByTagName('head')[0].appendChild(gallery_script.s);}})();");
+        $('#gallery_link').attr('href',"javascript:(function(){if(window.QILVGallery_overlays){window.QILVGallery_overlays.current.show();}else{gallery_script={};gallery_script.s=document.createElement('script');gallery_script.s.src='"+mainurl+"';"+keystring+"document.getElementsByTagName('head')[0].appendChild(gallery_script.s);}})();");
     }
     var setlink_using_param = function() {
         var config = {};

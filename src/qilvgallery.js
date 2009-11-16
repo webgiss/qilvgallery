@@ -15,6 +15,7 @@
         slideshow_speed : 500,
         auto_x : false,
         auto_y : false,
+        max_size : false,
         noConflict: function(){
             window.QILVGallery_overlays = _QILVGallery_overlays;
             return this;
@@ -55,11 +56,11 @@
             {
                 this.slideshow_speed = this.slideshow_speed - 100;
             }
-            this.create_infotip({content:'Speed : '+this.slideshow_speed+' ms',fadeOut:0,appendTo:"body"});
+            this.create_infotip({content:'Speed : '+this.slideshow_speed+' ms',fadeOut:0,appendTo:"body",position:"fixed"});
         },
         speeddown_slideshow : function() {
             this.slideshow_speed = this.slideshow_speed + 100;
-            this.create_infotip({content:'Speed : '+this.slideshow_speed+' ms',fadeOut:0,appendTo:"body"});
+            this.create_infotip({content:'Speed : '+this.slideshow_speed+' ms',fadeOut:0,appendTo:"body",position:"fixed"});
         },
         go_prev : function() {
             var newcurrent = this.prev;
@@ -85,6 +86,13 @@
             this.current.update(".QILVGallery_Image_"+num);
             this.prev.update( $(this.current.img.attr("current")).attr("gprev") );
             this.next.update( $(this.current.img.attr("current")).attr("gnext") );
+        },
+        toggle_max_size : function() {
+            this.max_size = !(this.max_size);
+            this.current.set_max_size(this.max_size);
+            this.prev.set_max_size(this.max_size);
+            this.next.set_max_size(this.max_size);
+            this.create_infotip({content:this.max_size?'Max size : 100%':'No max size',fadeOut:500,appendTo:"body",position:"fixed"});
         },
         toggle_auto_x : function() {
             this.auto_x = !(this.auto_x);
@@ -120,7 +128,7 @@
             if (params == undefined) {
                 params = {};
             }
-            var $info_tip = $("<div style='display:block;position:absolute;left:4px;top:4px;padding:15px;font-size:13px;background:#eef;color:#000000;font-family:courier new;border-left:2px solid #9999bb;border-top:2px solid #9999bb;border-right:2px solid #5555aa;border-bottom:2px solid #5555aa;-moz-border-radius:15px;z-index:50001'/>");
+            var $info_tip = $("<div style='display:block;position:absolute;left:4px;top:4px;padding:15px;font-size:13px;background:#eef;color:#000000;font-family:courier new;border-left:2px solid #9999bb;border-top:2px solid #9999bb;border-right:2px solid #5555aa;border-bottom:2px solid #5555aa;-moz-border-radius:15px;-webkit-border-radius:15px;z-index:50001'/>");
             if (params.id != undefined) {
                 $info_tip.attr("id",params.id);
             }
@@ -175,7 +183,21 @@
         open_link : function() {
             window.open(this.current.img[0].src);
         },
-        bindables : ["go_prev","go_next","toggle_infobox","toggle","open_link","startstop_slideshow","toggleposition","speedup_slideshow","speeddown_slideshow","toggle_auto_x","toggle_auto_y","toggle_auto_xy"],
+        bindables : [
+            "go_prev",
+            "go_next",
+            "toggle_infobox",
+            "toggle",
+            "open_link",
+            "startstop_slideshow",
+            "toggleposition",
+            "speedup_slideshow",
+            "speeddown_slideshow",
+            "toggle_max_size",
+            "toggle_auto_x",
+            "toggle_auto_y",
+            "toggle_auto_xy"
+        ],
         key_bindings : {
             LEFT : "go_prev",
             J : "go_prev",
@@ -188,6 +210,7 @@
             R : "toggleposition",
             NUMPAD_ADD : "speedup_slideshow",
             NUMPAD_SUBSTRACT : "speeddown_slideshow",
+            M : "toggle_max_size",
             X : "toggle_auto_x",
             Y : "toggle_auto_y",
             Z : "toggle_auto_xy"
@@ -203,6 +226,16 @@
                     position : "absolute",
                     onload_img : function(){
                         $(this).css("border","2px solid black");
+                    },
+                    set_max_size : function(max_size) {
+                        this.max_size = max_size;
+                        if (this.max_size) {
+                            this.img.css("max-width","100%");
+                            this.img.css("max-height","100%");
+                        } else {
+                            this.img.css("max-width","");
+                            this.img.css("max-height","");
+                        }
                     },
                     set_auto_x : function(auto_x) {
                         this.auto_x = auto_x;
@@ -230,9 +263,11 @@
                         this.img.load(this.onload_img);
                         this.img.attr("current",selector);
                         this.img.css("border","2px solid red");
+                        this.img.css("-moz-box-sizing","border-box");
                         this.img.attr("src",$(this.img.attr("current")).attr("href"));
                         this.set_auto_x(this.auto_x);
                         this.set_auto_y(this.auto_y);
+                        this.set_max_size(this.max_size);
                         this.a.attr("href",$(this.img.attr("current")).attr("href"));
                         this.a.attr("target","_blank");
                         this.a.append(this.img);

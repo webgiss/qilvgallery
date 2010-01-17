@@ -1,25 +1,36 @@
 (function(){
-    function add_css(href) {
-        var node = document.createElement('link');
-        node.rel = 'stylesheet';
-        node.href = href;
-        node.type = 'text/css';
+    function add_headtag(tagname, properties) {
+        var node = document.createElement(tagname);
+        for(key in properties) { node[key]=properties[key]; }
         document.getElementsByTagName('head')[0].appendChild(node);
+    }
+    function add_css(href) {
+        add_headtag(
+            'link',{ 
+                rel:'stylesheet', 
+                href:href, 
+                type:'text/css' 
+            }
+        );
     }
     function add_script_ref(src) {
-        var node = document.createElement('script');
-        node.src = src;
-        node.type = 'text/javascript';
-        document.getElementsByTagName('head')[0].appendChild(node);
+        add_headtag(
+            'script',{ 
+                src:src, 
+                type:'text/javascript' 
+            }
+        );
     }
     function add_script_content(content) {
-        var node = document.createElement('script');
-        node.type = 'text/javascript';
-        node.text = content;
-        document.getElementsByTagName('head')[0].appendChild(node);
+        add_headtag(
+            'script',{ 
+                text:content, 
+                type:'text/javascript' 
+            }
+        );
     }
     
-    var jquery_version = "1.3";
+    var jquery_version = "1.4";
     add_script_ref('http://ajax.googleapis.com/ajax/libs/jquery/' + jquery_version + '/jquery.min.js');
     add_script_ref(window.qilv_prefix+'VK.js'+window.qilv_suffix);
     add_script_ref(window.qilv_prefix+'qilvgallery.js'+window.qilv_suffix);

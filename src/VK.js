@@ -1,5 +1,6 @@
 (function(){
-    var window = this,
+    var 
+    window = this,
     undefined,
     $ = window.jQuery,
     _VK = window.VK,

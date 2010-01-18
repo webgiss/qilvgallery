@@ -16,6 +16,7 @@
         auto_x : false,
         auto_y : false,
         max_size : false,
+        relative : false,
         noConflict: function(){
             window.QILVGallery_overlays = _QILVGallery_overlays;
             return this;
@@ -186,7 +187,8 @@
         configurables : [
             "slideshow_speed",
             "slideshow_mode",
-            "max_size"
+            "max_size",
+            "relative"
         ],
         bindables : [
             "go_prev",
@@ -348,15 +350,18 @@
                 this.create_infotip({content:'No links to image found in this page !',fadeOut:1500,appendTo:"body",position:"fixed"});
             }
             VK.auto_bind(self);
-            console.log(['init:']);
+            // console.log(['init:']);
             $.each(self.configurables,function(index,keyname) {
                 var value = GM_values["QILV."+keyname];
-                if (value.match(/^\-?[0-9]+$/)) { value = parseInt(value);}
-                if (value == 'false') { value = false; }
-                if (value == 'true') { value = true; }
-                console.log(['configuration:',keyname,value]);
-                self[keyname] = value;
-                console.log(['configuration2:',self,keyname,this[keyname]]);
+                if (value != undefined)
+                {
+                    if (value.match(/^\-?[0-9]+$/)) { value = parseInt(value);}
+                    if (value == 'false') { value = false; }
+                    if (value == 'true') { value = true; }
+                    // console.log(['configuration:',keyname,value]);
+                    self[keyname] = value;
+                }
+                // console.log(['configuration2:',self,keyname,this[keyname]]);
             });
             this.current.set_max_size(this.max_size);
             this.prev.set_max_size(this.max_size);
@@ -364,6 +369,10 @@
             if (this.slideshow_mode)
             {
                 this.prepare_next_slide();
+            }
+            if (this.relative)
+            {
+                this.toggleposition();
             }
             return self;
         }

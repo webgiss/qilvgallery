@@ -113,7 +113,7 @@
             element = $(element);
 
             if (target.bindables == undefined) {
-                target.bindables = [];
+                target.bindables = {};
             }
                         
             var binding_to_delete = [];
@@ -128,7 +128,7 @@
             $.each(target.key_bindings,function(keyname,methodname) {
                 self.global_bindings[self.getValue(keyname)] = [target,methodname];
                 if (!(methodname in target.bindables)) {
-                    target.bindables.push(methodname);
+                    target.bindables[methodname] = "??? (" + methodname + ")";
                 }
             });
             $.each(self.keys,function(index,keyname) {

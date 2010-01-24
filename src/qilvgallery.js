@@ -129,7 +129,7 @@
             if (params == undefined) {
                 params = {};
             }
-            var $info_tip = $("<div style='display:block;position:absolute;left:4px;top:4px;padding:15px;font-size:13px;background:#eef;color:#000000;font-family:courier new;border-left:2px solid #9999bb;border-top:2px solid #9999bb;border-right:2px solid #5555aa;border-bottom:2px solid #5555aa;-moz-border-radius:15px;-webkit-border-radius:15px;z-index:50001'/>");
+            var $info_tip = $("<div style='display:block;position:absolute;left:4px;top:4px;padding:15px;font-size:13px;background:#e9ecf9;color:#000000;font-family:courier new;border-left:2px solid #9999bb;border-top:2px solid #9999bb;border-right:2px solid #5555aa;border-bottom:2px solid #5555aa;-moz-border-radius:15px;-webkit-border-radius:15px;z-index:50001'/>");
             if (params.id != undefined) {
                 $info_tip.attr("id",params.id);
             }
@@ -184,27 +184,54 @@
         open_link : function() {
             window.open(this.current.img[0].src);
         },
-        configurables : [
-            "slideshow_speed",
-            "slideshow_mode",
-            "max_size",
-            "relative"
-        ],
-        bindables : [
-            "go_prev",
-            "go_next",
-            "toggle_infobox",
-            "toggle",
-            "open_link",
-            "startstop_slideshow",
-            "toggleposition",
-            "speedup_slideshow",
-            "speeddown_slideshow",
-            "toggle_max_size",
-            "toggle_auto_x",
-            "toggle_auto_y",
-            "toggle_auto_xy"
-        ],
+        help : function() {
+            var gallery = this;
+            if ($('#QILVGallery_Help').length > 0) {
+                $('#QILVGallery_Help').remove();
+            } else {
+                // var $info_tip = $("<div id='QILVGallery_Infotip'/>");
+                var $info_tip = this.create_infotip({ id : 'QILVGallery_Help' });
+                $info_tip.append($("<h1/>").html("Keyboard configuration"));
+                var $info_tip_div = $("<div/>").css('margin-left','10px');
+                $.each(VK.global_bindings,function(vk_value,vk_props) {
+                    if (vk_props[0] == gallery)
+                    {
+                        // console.log([vk_value,VK.getName(vk_value)]);
+                        $info_tip_div.append($("<div/>").html("<b>"+VK.getName(vk_value)+"</b>: "+((vk_props[1] in gallery.bindables) ? gallery.bindables[vk_props[1]] : vk_props[1])));
+                    }
+                });
+                $info_tip.append($info_tip_div);
+                $info_tip.append($("<h1/>").html("Values"));
+                $info_tip_div = $("<div/>").css('margin-left','10px');
+                $.each(gallery.configurables,function(attr,comment) {
+                    $info_tip_div.append($("<div/>").html("<b>"+comment+" (current value)</b>: "+(GM_values['QILV.'+attr] || "default")+" ("+gallery[attr]+")"));
+                });
+                $info_tip.append($info_tip_div);
+                $("body").append($info_tip);
+            }
+        },
+        configurables : {
+            "slideshow_speed" : "Initial slideshow speed (ms)",
+            "slideshow_mode" : "Slideshow on at start ?",
+            "max_size" : "Fit the image to the screen if bigger than the screen at start ?",
+            "relative" : "Show image at the top of the screen instead of the top of the page at start ?"
+        },
+        bindables : {
+            "go_prev" : "Go to previous image",
+            "go_next" : "Go to next image",
+            "toggle_infobox" : "Show/hide the infobox of image list",
+            "toggle" : "Show/Hide the current image",
+            "open_link" : "Open the image in a new window/tab",
+            "startstop_slideshow" : "Start/stop the slideshow",
+            "toggleposition" : "Show current image at top of the page/top of the screen",
+            "speedup_slideshow" : "Increase the slideshow speed",
+            "speeddown_slideshow" : "Decrease the slideshow speed",
+            "toggle_max_size" : "Fit the image if larger than the screen/Show whole image",
+            "toggle_auto_x" : "Width of the image fit/doesn't fit to width of the screen",
+            "toggle_auto_y" : "Height of the image fit/doesn't fit to height of the screen",
+            "toggle_auto_xy" : "Width and height of the image fit/doesn't fit to width and height of the screen",
+            "help" : "Show/Hide help box"
+        },
         key_bindings : {
             LEFT : "go_prev",
             J : "go_prev",
@@ -220,7 +247,8 @@
             M : "toggle_max_size",
             X : "toggle_auto_x",
             Y : "toggle_auto_y",
-            Z : "toggle_auto_xy"
+            Z : "toggle_auto_xy",
+            NUMPAD_MULTIPLY : "help"
         },
         init : function() {
             var self = this;
@@ -351,7 +379,7 @@
             }
             VK.auto_bind(self);
             // console.log(['init:']);
-            $.each(self.configurables,function(index,keyname) {
+            $.each(self.configurables,function(keyname,v) {
                 var value = GM_values["QILV."+keyname];
                 if (value != undefined)
                 {

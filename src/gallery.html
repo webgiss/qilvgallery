@@ -4,19 +4,32 @@
 <script src='VK.js' type='text/javascript'></script>
 <script src='qilvgallery.js' type='text/javascript'></script>
 <style type='text/css'>
+.infopanel,
 .configpanel,
 .link {
     width: auto;
     margin-left: 100px;
     margin-right: 100px;
     display : block;
-    background-color: #cceeff;
-    border: 2px #88ccff solid;
     text-align : center;
     font-family : 'Georgia';
     padding: 5px 20px;
     -moz-border-radius : 10px;
     text-decoration : none;
+}
+.infopanel{
+    background-color: #ffffff;
+    border: 2px #c3d9ff solid;
+    padding: 10px;
+}
+.configpanel{
+    background-color: #c3d9ff;
+    border: 0px #c3d9ff solid;
+    padding: 10px;
+}
+.link {
+    background-color: #c3d9ff;
+    border: 2px #0000cc solid;
 }
 a:visited, 
 a:active, 
@@ -26,9 +39,8 @@ a
     text-decoration : none;
     color: #0000cc;
 }
-
+.infopanel,
 .configpanel {
-    padding: 30px;
     margin-bottom: 10px;
     margin-top: 10px;
 }
@@ -73,6 +85,7 @@ jQuery(function($){
             keystring += "};";
         }
         $('#gallery_link').attr('href',"javascript:(function(){if(window.QILVGallery_overlays){window.QILVGallery_overlays.current.show();}else{addscript=function(src){n=document.createElement('script');n.type='text/javascript';if(src){n.src=src;};document.getElementsByTagName('head')[0].appendChild(n);return n;};"+keystring+"addscript('http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js');addscript('"+prefix_url+"VK.js"+suffix_url+"');addscript('"+prefix_url+"qilvgallery.js"+suffix_url+"');addscript('"+prefix_url+"init.js"+suffix_url+"');}})();");
+        $('#gallery_link').hide();$('#gallery_link').fadeIn('slow');
         // $('#gallery_link').attr('href',"javascript:(function(){if(window.QILVGallery_overlays){window.QILVGallery_overlays.current.show();}else{gallery_script={};gallery_script.s=document.createElement('script');window.qilv_prefix='"+prefix_url+"';window.qilv_suffix='"+suffix_url+"';gallery_script.s.src='"+mainurl+"';"+keystring+"document.getElementsByTagName('head')[0].appendChild(gallery_script.s);}})();");
     }
     var setlink_using_param = function() {
@@ -122,8 +135,8 @@ jQuery(function($){
         $combo = $('<select style="width:100%"/>');
         $line.find('td.action').append($combo);
         $combo.append($('<option/>').html("-- no action --").attr('value',''));
-        $.each(QILVGallery_overlays.bindables,function(index,value) {
-            var $option = $('<option/>').html(value).attr('value',value)
+        $.each(QILVGallery_overlays.bindables,function(value,comment) {
+            var $option = $('<option/>').html(comment).attr('value',value)
             if (value == actionname)
             {
                 $option.attr('selected','true');
@@ -132,13 +145,13 @@ jQuery(function($){
         });        
         $combo.change(setlink_using_param);
     }
-    var addvaluesbuttons = function(name,value) {
+    var addvaluesbuttons = function(name,value,comment) {
         var $line = $("<tr><td class='key'></td><td class='action'></td></tr>");
         $('#valuespanel table').append($line);
         $line.find('td').css('width','50%');
         var $combo = $('<select style="width:100%"/>');
         $line.find('td.key').append($combo);
-        $combo.append($('<option/>').html(name).attr('value',name));
+        $combo.append($('<option/>').html(comment).attr('value',name));
         
         $combo.change(setlink_using_param);
         $combo = $('<input style="width:100%"/>').html(value).attr('value',value);
@@ -157,8 +170,8 @@ jQuery(function($){
     });
     $('#valuepanel').append("<div id='valuespanel'/>");
     $('#valuespanel').append("<table style='width:100%'></table>");
-    $.each(QILVGallery_overlays.configurables,function(index,name) {
-        addvaluesbuttons(name,QILVGallery_overlays[name]);
+    $.each(QILVGallery_overlays.configurables,function(name,comment) {
+        addvaluesbuttons(name,QILVGallery_overlays[name],comment);
     });
     setlink_using_param();
     
@@ -168,7 +181,7 @@ jQuery.noConflict();
 </script>
 </head>
 <body>
-<p style='text-align:center'>Set your configuration below and drop the "Gallery" link into your toolbar to install bookmarklet.</p>
+<div class='infopanel' style='text-align:center'><p>Set your configuration below and drop the "Gallery" link into your toolbar to install bookmarklet.<br/>Use this bookmarklet on pages containing links to image to generate a gallery slideshow.</p></div>
 <a id='gallery_link' class='link'>Gallery</a>
 <div id='keyboardpanel' class='configpanel'></div>
 <div id='valuepanel' class='configpanel'></div>

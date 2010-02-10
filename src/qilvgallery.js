@@ -4,8 +4,99 @@
     undefined,
     $ = window.jQuery,
     VK = window.VK,
-    _QILVGallery_overlays = window.QILVGallery_overlays,
-    QILVGallery_overlays = window.QILVGallery_overlays = {
+    makeClass = function(proto) {
+        var class = proto.__init__;
+        class.prototype = proto;
+        return class;
+    },
+    ImageOverlay = makeClass({
+        div : $("<div id='QILVGallery_Overlay_"+index+"' style='display:none'/>"),
+        a : $("<a/>"),
+        index : index,
+        position : "absolute",
+        onload_img : function(){
+            $(this).css("border","2px solid black");
+        },
+        set_max_size : function(max_size) {
+            this.max_size = max_size;
+            if (this.max_size) {
+                this.img.css("max-width","100%");
+                this.img.css("max-height","100%");
+            } else {
+                this.img.css("max-width","");
+                this.img.css("max-height","");
+            }
+        },
+        set_auto_x : function(auto_x) {
+            this.auto_x = auto_x;
+            if (this.auto_x) {
+                this.img.css("width","100%");
+            } else {
+                this.img.css("width","auto");
+            }
+        },
+        set_auto_y : function(auto_y) {
+            this.auto_y = auto_y;
+            if (this.auto_y) {
+                this.img.css("height","100%");
+            } else {
+                this.img.css("height","auto");
+            }
+        },
+        update : function(selector) {
+            if (this.img != undefined)
+            {
+                this.img.remove();
+            }
+            this.img = $("<img id='QILVGallery_Current_"+this.index+"' class='QILVGallery_Current' src='#' style='display:block;position:absolute;left:0;top:0;z-index:50000' />");
+            this.img.css("position",this.position);
+            this.img.load(this.onload_img);
+            this.img.attr("current",selector);
+            this.img.css("border","2px solid red");
+            this.img.css("-moz-box-sizing","border-box");
+            this.img.attr("src",$(this.img.attr("current")).attr("href"));
+            this.set_auto_x(this.auto_x);
+            this.set_auto_y(this.auto_y);
+            this.set_max_size(this.max_size);
+            this.a.attr("href",$(this.img.attr("current")).attr("href"));
+            this.a.attr("target","_blank");
+            this.a.append(this.img);
+            $('#QILVGallery_Infotip').remove();
+        },
+        hide : function() {
+            this.div.css("display","none");
+            this.a.removeAttr("accesskey");
+        },
+        show : function() {
+            this.a.attr("accesskey","l");
+            this.div.css("display","block");
+        },
+        toggle : function() {
+            if (this.div.css("display")=="none")
+            {
+                this.show();
+            }
+            else
+            {
+                this.hide();
+            }
+        },
+        toggleposition : function() {
+            if (this.position=="absolute")
+            {
+                this.position = "fixed";
+            }
+            else
+            {
+                this.position = "absolute";
+            }
+            this.img.css("position",this.position);
+        },
+        __init__ : function() {
+            $("body").append(this.div.append(this.a));
+        }
+    }),
+    GalleryOverlays = makeClass({
         __name__ : 'Gallery',
         prev : null,
         next : null,
@@ -191,7 +282,8 @@
             } else {
                 // var $info_tip = $("<div id='QILVGallery_Infotip'/>");
                 var $info_tip = this.create_infotip({ id : 'QILVGallery_Help' });
-                $info_tip.append($("<h1/>").html("Keyboard configuration"));
+                $info_tip.css('font-family','"Trebuchet MS",Tahoma,Verdana,Arial,sans-serif').css('font-size','10pt').css('text-align','left')
+                $info_tip.append($("<h1/>").css('font-size','2em').css('font-weight','bold').html("Keyboard configuration"));
                 var $info_tip_div = $("<div/>").css('margin-left','10px');
                 $.each(VK.global_bindings,function(vk_value,vk_props) {
                     if (vk_props[0] == gallery)
@@ -201,7 +293,7 @@
                     }
                 });
                 $info_tip.append($info_tip_div);
-                $info_tip.append($("<h1/>").html("Values"));
+                $info_tip.append($("<h1/>").css('font-size','2em').css('font-weight','bold').html("Values"));
                 $info_tip_div = $("<div/>").css('margin-left','10px');
                 $.each(gallery.configurables,function(attr,comment) {
                     $info_tip_div.append($("<div/>").html("<b>"+comment+" (current value)</b>: "+(GM_values['QILV.'+attr] || "default")+" ("+gallery[attr]+")"));
@@ -250,98 +342,13 @@
             Z : "toggle_auto_xy",
             NUMPAD_MULTIPLY : "help"
         },
+        __init__ : function() {
+        },
         init : function() {
             var self = this;
             
             $.each(["prev","current","next"],function(index,element){
-                self[element] = {
-                    div : $("<div id='QILVGallery_Overlay_"+index+"' style='display:none'/>"),
-                    a : $("<a/>"),
-                    index : index,
-                    position : "absolute",
-                    onload_img : function(){
-                        $(this).css("border","2px solid black");
-                    },
-                    set_max_size : function(max_size) {
-                        this.max_size = max_size;
-                        if (this.max_size) {
-                            this.img.css("max-width","100%");
-                            this.img.css("max-height","100%");
-                        } else {
-                            this.img.css("max-width","");
-                            this.img.css("max-height","");
-                        }
-                    },
-                    set_auto_x : function(auto_x) {
-                        this.auto_x = auto_x;
-                        if (this.auto_x) {
-                            this.img.css("width","100%");
-                        } else {
-                            this.img.css("width","auto");
-                        }
-                    },
-                    set_auto_y : function(auto_y) {
-                        this.auto_y = auto_y;
-                        if (this.auto_y) {
-                            this.img.css("height","100%");
-                        } else {
-                            this.img.css("height","auto");
-                        }
-                    },
-                    update : function(selector) {
-                        if (this.img != undefined)
-                        {
-                            this.img.remove();
-                        }
-                        this.img = $("<img id='QILVGallery_Current_"+this.index+"' class='QILVGallery_Current' src='#' style='display:block;position:absolute;left:0;top:0;z-index:50000' />");
-                        this.img.css("position",this.position);
-                        this.img.load(this.onload_img);
-                        this.img.attr("current",selector);
-                        this.img.css("border","2px solid red");
-                        this.img.css("-moz-box-sizing","border-box");
-                        this.img.attr("src",$(this.img.attr("current")).attr("href"));
-                        this.set_auto_x(this.auto_x);
-                        this.set_auto_y(this.auto_y);
-                        this.set_max_size(this.max_size);
-                        this.a.attr("href",$(this.img.attr("current")).attr("href"));
-                        this.a.attr("target","_blank");
-                        this.a.append(this.img);
-                        $('#QILVGallery_Infotip').remove();
-                    },
-                    hide : function() {
-                        this.div.css("display","none");
-                        this.a.removeAttr("accesskey");
-                    },
-                    show : function() {
-                        this.a.attr("accesskey","l");
-                        this.div.css("display","block");
-                    },
-                    toggle : function() {
-                        if (this.div.css("display")=="none")
-                        {
-                            this.show();
-                        }
-                        else
-                        {
-                            this.hide();
-                        }
-                    },
-                    toggleposition : function() {
-                        if (this.position=="absolute")
-                        {
-                            this.position = "fixed";
-                        }
-                        else
-                        {
-                            this.position = "absolute";
-                        }
-                        this.img.css("position",this.position);
-                    },
-                    init : function() {
-                        $("body").append(this.div.append(this.a));
-                    }
-                };
-                self[element].init();
+                self[element] = new ImageOverlay();
             });
             
             var previouslink = undefined;
@@ -404,5 +411,7 @@
             }
             return self;
         }
-    }
+    }),
+    _QILVGallery_overlays = window.QILVGallery_overlays,
+    QILVGallery_overlays = window.QILVGallery_overlays = new GalleryOverlays();
 })();

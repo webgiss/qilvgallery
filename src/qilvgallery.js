@@ -72,12 +72,32 @@
             $('#QILVGallery_Infotip').remove();
         },
         hide : function() {
-            this.div.css("display","none");
-            this.a.removeAttr("accesskey");
+            var self=this;
+            if (this.transition_time > 0) {
+                self.img.css("z-index",50001);
+                self.img.fadeOut(this.transition_time,function(){
+                    self.div.css("display","none");
+                    self.img.css("z-index",50000);
+                });
+            } else {
+                self.div.css("display","none");
+            }
+            
+            self.a.removeAttr("accesskey");
         },
         show : function() {
-            this.a.attr("accesskey","l");
-            this.div.css("display","block");
+            var self=this;
+            self.a.attr("accesskey","l");
+            if (this.transition_time > 0) {
+                self.img.css("z-index",50000);
+                self.img.css("display","none");
+                self.div.css("display","block");
+                self.img.fadeIn(this.transition_time,function(){
+                
+                });
+            } else {
+                self.div.css("display","block");
+            }
         },
         is_on : function() {
             return !(this.div.css("display")=="none");
@@ -131,12 +151,16 @@
         toggleposition : function() {
             this.set_relative(!(this.get_relative()));
         },
+        set_transition_time : function(transition_time) {
+            this.transition_time = transition_time;
+        },
         __init__ : function(index) {
             this.div = $("<div id='QILVGallery_Overlay_"+index+"' style='display:none'/>");
             this.a = $("<a/>");
             this.index = index;
             this.position = "absolute";
             this.is_centeronscreen = false;
+            this.transition_time = 0;
             $("body").append(this.div.append(this.a));
         }
     }),
@@ -159,9 +183,30 @@
         relative : false,
         is_center_on_screen : false,
         is_black_screen : false,
+        transition_time : 0,
         noConflict: function(){
             window.QILVGallery_overlays = _QILVGallery_overlays;
             return this;
+        },
+        set_transition_time : function(transition_time) {
+            this.transition_time = transition_time;
+            var self=this;
+            $.each(['prev','next','current'],function(index,element) {
+                self[element].set_transition_time(transition_time);
+            });
+            this.create_infotip({content:'Transition\'s effect\'s time : '+transition_time+' ms',fadeOut:0,appendTo:"body",position:"fixed"});
+        },
+        cycle_transition_time : function() {
+            if (this.transition_time == 0) {
+                this.transition_time = 300;
+            } else if (this.transition_time <= 300) { 
+                this.transition_time = 800;
+            } else if (this.transition_time <= 800) { 
+                this.transition_time = 1500;
+            } else {
+                this.transition_time = 0;
+            }
+            this.set_transition_time(this.transition_time);
         },
         set_center_on_screen : function (is_center_on_screen) {
             var self=this;
@@ -182,7 +227,7 @@
             {
                 var $div = $("<div id='QILVGallery_black_screen'/>");
                 $("body").append($div);
-                $div.css("z-index","49999");
+                $div.css("z-index","49998");
                 $div.css("width","100%");
                 $div.css("height","100%");
                 $div.css("position","fixed");
@@ -408,10 +453,11 @@
         },
         configurables : {
             "slideshow_speed" : "Initial slideshow speed (ms)",
+            "transition_time" : "Initial transition's effect's time (ms)",
             "slideshow_mode" : "Slideshow on at start ?",
             "max_size" : "Fit the image to the screen if bigger than the screen at start ?",
             "relative" : "Show image at the top of the screen instead of the top of the page at start ?",
-            "is_black_screen" : "Show on 'black screen' mode ?"
+            "is_black_screen" : "Show on 'black screen' mode at start ?",
         },
         bindables : {
             "go_prev" : "Go to previous image",
@@ -428,6 +474,7 @@
             "toggle_auto_y" : "Height of the image fit/doesn't fit to height of the screen",
             "toggle_auto_xy" : "Width and height of the image fit/doesn't fit to width and height of the screen",
             "toggle_black_screen" : "Set or remove the black screen",
+            "cycle_transition_time" : "Change transition's effect's time",
             "help" : "Show/Hide help box"
         },
         key_bindings : {
@@ -447,6 +494,7 @@
             Y : "toggle_auto_y",
             Z : "toggle_auto_xy",
             B : "toggle_black_screen",
+            T : "cycle_transition_time",
             NUMPAD_MULTIPLY : "help"
         },
         __init__ : function() {
@@ -489,6 +537,8 @@
             }
             else
             {
+                this.stop_slideshow();
+                this.set_black_screen(false);
                 this.create_infotip({content:'No links to image found in this page !',fadeOut:1500,appendTo:"body",position:"fixed"});
             }
             VK.auto_bind(self);

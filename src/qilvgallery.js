@@ -10,10 +10,6 @@
         return class;
     },
     ImageOverlay = makeClass({
-        div : $("<div id='QILVGallery_Overlay_"+index+"' style='display:none'/>"),
-        a : $("<a/>"),
-        index : index,
-        position : "absolute",
         onload_img : function(){
             $(this).css("border","2px solid black");
         },
@@ -92,7 +88,11 @@
             }
             this.img.css("position",this.position);
         },
-        __init__ : function() {
+        __init__ : function(index) {
+            this.div = $("<div id='QILVGallery_Overlay_"+index+"' style='display:none'/>");
+            this.a = $("<a/>");
+            this.index = index;
+            this.position = "absolute";
             $("body").append(this.div.append(this.a));
         }
     }),
@@ -348,7 +348,7 @@
             var self = this;
             
             $.each(["prev","current","next"],function(index,element){
-                self[element] = new ImageOverlay();
+                self[element] = new ImageOverlay(index);
             });
             
             var previouslink = undefined;

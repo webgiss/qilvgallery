@@ -513,6 +513,7 @@
                 this.prepare_next_slide();
             }
             this.set_relative(this.relative);
+            this.set_black_screen(this.is_black_screen);
             return self;
         }
     }),

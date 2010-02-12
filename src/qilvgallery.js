@@ -9,6 +9,10 @@
         class.prototype = proto;
         return class;
     },
+    
+    // ----------------------------------------------------
+    // Class ImageOverlay
+    // ----------------------------------------------------
     ImageOverlay = makeClass({
         onload_img : function(){
             $(this).css("border","2px solid black");
@@ -57,6 +61,14 @@
             this.a.attr("href",$(this.img.attr("current")).attr("href"));
             this.a.attr("target","_blank");
             this.a.append(this.img);
+            if (this.is_centeronscreen)
+            {
+                this.centeronscreen();
+            } 
+            else
+            {
+                this.uncenteronscreen();
+            }
             $('#QILVGallery_Infotip').remove();
         },
         hide : function() {
@@ -67,18 +79,46 @@
             this.a.attr("accesskey","l");
             this.div.css("display","block");
         },
+        is_on : function() {
+            return !(this.div.css("display")=="none");
+        },
         toggle : function() {
-            if (this.div.css("display")=="none")
-            {
-                this.show();
-            }
-            else
+            if (this.is_on())
             {
                 this.hide();
             }
+            else
+            {
+                this.show();
+            }
         },
-        toggleposition : function() {
-            if (this.position=="absolute")
+        togglecenteronscreen : function() {
+            if (this.is_centeronscreen)
+            {
+                this.uncenteronscreen();
+            }
+            else
+            {
+                this.centeronscreen();
+            }
+        },
+        centeronscreen : function() {
+            this.img.css("right","0");
+            this.img.css("bottom","0");
+            this.img.css("margin","auto");
+            this.is_centeronscreen = true;
+        },
+        uncenteronscreen : function() {
+            this.img.css("right","");
+            this.img.css("bottom","");
+            this.img.css("margin","");
+            this.is_centeronscreen = false;
+        },
+        get_relative : function() {
+            return this.position=="fixed";
+        },
+        set_relative : function(relative) {
+            if (relative)
             {
                 this.position = "fixed";
             }
@@ -88,14 +128,23 @@
             }
             this.img.css("position",this.position);
         },
+        toggleposition : function() {
+            this.set_relative(!(this.get_relative()));
+        },
         __init__ : function(index) {
             this.div = $("<div id='QILVGallery_Overlay_"+index+"' style='display:none'/>");
             this.a = $("<a/>");
             this.index = index;
             this.position = "absolute";
+            this.is_centeronscreen = false;
             $("body").append(this.div.append(this.a));
         }
     }),
+    // ----------------------------------------------------
+    
+    // ----------------------------------------------------
+    // Class GalleryOverlays
+    // ----------------------------------------------------
     GalleryOverlays = makeClass({
         __name__ : 'Gallery',
         prev : null,
@@ -108,9 +157,45 @@
         auto_y : false,
         max_size : false,
         relative : false,
+        is_center_on_screen : false,
+        is_black_screen : false,
         noConflict: function(){
             window.QILVGallery_overlays = _QILVGallery_overlays;
             return this;
+        },
+        set_center_on_screen : function (is_center_on_screen) {
+            var self=this;
+            $.each(['prev','next','current'],function(index,element) {
+                if (self[element]) {
+                    if (is_center_on_screen) {
+                        self[element].centeronscreen();
+                    } else {
+                        self[element].uncenteronscreen();
+                    }
+                }
+            });
+            this.is_center_on_screen = is_center_on_screen;
+        },
+        set_black_screen : function (is_black_screen) {
+            var $black_screen = $("#QILVGallery_black_screen");
+            if (is_black_screen && ($black_screen.length==0))
+            {
+                var $div = $("<div id='QILVGallery_black_screen'/>");
+                $("body").append($div);
+                $div.css("z-index","49999");
+                $div.css("width","100%");
+                $div.css("height","100%");
+                $div.css("position","fixed");
+                $div.css("left","0");
+                $div.css("top","0");
+                $div.css("background","black");
+            }
+            if ((!is_black_screen) && ($black_screen.length>0))
+            {
+                $black_screen.remove();
+            }
+            this.set_center_on_screen(is_black_screen);
+            this.is_black_screen = is_black_screen;
         },
         show_slideshow_slide : function () {
             if (this.slideshow_mode) {
@@ -163,6 +248,7 @@
             this.current = newcurrent;
             this.current.show();
             this.prev.update( $(this.current.img.attr("current")).attr("gprev") );
+            this.set_black_screen(this.is_black_screen);
         },
         go_next : function() {
             var newcurrent = this.next;
@@ -173,11 +259,13 @@
             this.current = newcurrent;
             this.current.show();
             this.next.update( $(this.current.img.attr("current")).attr("gnext") );
+            this.set_black_screen(this.is_black_screen);
         },
         go_num : function(num) {
             this.current.update(".QILVGallery_Image_"+num);
             this.prev.update( $(this.current.img.attr("current")).attr("gprev") );
             this.next.update( $(this.current.img.attr("current")).attr("gnext") );
+            this.set_black_screen(this.is_black_screen);
         },
         toggle_max_size : function() {
             this.max_size = !(this.max_size);
@@ -265,12 +353,28 @@
             }
         },
         toggle : function() {
+            if (this.current.is_on())
+            {
+                $("#QILVGallery_black_screen").remove();
+            }
+            else
+            {
+                this.set_black_screen(this.is_black_screen);
+            }
             this.current.toggle();
         },
         toggleposition : function() {
-            this.current.toggleposition();
-            this.next.toggleposition();
-            this.prev.toggleposition();
+            this.set_relative(!this.relative);
+        },
+        set_relative : function(relative) {
+            this.relative = relative;
+            this.current.set_relative(this.relative);
+            this.next.set_relative(this.relative);
+            this.prev.set_relative(this.relative);
+        },
+        toggle_black_screen : function() {
+            this.is_black_screen = !(this.is_black_screen);
+            this.set_black_screen(this.is_black_screen);
         },
         open_link : function() {
             window.open(this.current.img[0].src);
@@ -306,7 +410,8 @@
             "slideshow_speed" : "Initial slideshow speed (ms)",
             "slideshow_mode" : "Slideshow on at start ?",
             "max_size" : "Fit the image to the screen if bigger than the screen at start ?",
-            "relative" : "Show image at the top of the screen instead of the top of the page at start ?"
+            "relative" : "Show image at the top of the screen instead of the top of the page at start ?",
+            "is_black_screen" : "Show on 'black screen' mode ?"
         },
         bindables : {
             "go_prev" : "Go to previous image",
@@ -322,6 +427,7 @@
             "toggle_auto_x" : "Width of the image fit/doesn't fit to width of the screen",
             "toggle_auto_y" : "Height of the image fit/doesn't fit to height of the screen",
             "toggle_auto_xy" : "Width and height of the image fit/doesn't fit to width and height of the screen",
+            "toggle_black_screen" : "Set or remove the black screen",
             "help" : "Show/Hide help box"
         },
         key_bindings : {
@@ -340,6 +446,7 @@
             X : "toggle_auto_x",
             Y : "toggle_auto_y",
             Z : "toggle_auto_xy",
+            B : "toggle_black_screen",
             NUMPAD_MULTIPLY : "help"
         },
         __init__ : function() {
@@ -405,13 +512,12 @@
             {
                 this.prepare_next_slide();
             }
-            if (this.relative)
-            {
-                this.toggleposition();
-            }
+            this.set_relative(this.relative);
             return self;
         }
     }),
+    // ----------------------------------------------------
+    
     _QILVGallery_overlays = window.QILVGallery_overlays,
     QILVGallery_overlays = window.QILVGallery_overlays = new GalleryOverlays();
 })();

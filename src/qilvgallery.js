@@ -171,6 +171,7 @@
     // ----------------------------------------------------
     GalleryOverlays = makeClass({
         __name__ : 'Gallery',
+        jquery : $,
         prev : null,
         next : null,
         current : null,
@@ -370,6 +371,16 @@
                 setTimeout(function(){ $info_tip.fadeOut("slow",function(){ $info_tip.remove(); }); },params.fadeOut);
                 $(params.appendTo).append($info_tip);
             }
+            if (params.center != undefined) {
+                if (params.center) {
+                    $info_tip.css("position","fixed");
+                    $info_tip.css("left","0");
+                    $info_tip.css("right","0");
+                    $info_tip.css("top","0");
+                    $info_tip.css("bottom","0");
+                    $info_tip.css("margin","auto");
+                }
+            }
             return $info_tip;
         },
         toggle_infobox : function() {
@@ -424,6 +435,57 @@
         open_link : function() {
             window.open(this.current.img[0].src);
         },
+        about : function() {
+            if ($('#QILVGallery_About').length > 0) {
+                $('#QILVGallery_About').remove();
+                $('#QILVGallery_About_black_screen').remove();
+            } else {
+                // var $info_tip = $("<div id='QILVGallery_Infotip'/>");
+                var $info_tip = this.create_infotip({ id : 'QILVGallery_About', center : true });
+                $info_tip.css('font-family','"Trebuchet MS",Tahoma,Verdana,Arial,sans-serif').css('font-size','15pt').css('text-align','center');
+                $info_tip.css('max-width','500px');
+                $info_tip.css('max-height','300px');
+                $info_tip.css('border','1px solid white');
+                $info_tip.css('background','#a2a2a2');
+                $info_tip.css('background','-moz-linear-gradient(90deg,#888,#ddd)');
+                $info_tip.css('z-index','50100');
+                $info_tip.append($('<p>QILV Gallery</p>').css('font-size','20pt'));
+                $info_tip.append("<a href='http://code.google.com/p/qilvgallery/' target='_blank'>http://code.google.com/p/qilvgallery/</a>");
+                $info_tip.append($('<br/>'));
+                var $close_button = $('<div>Close</div>');
+                $close_button.css('width','20em');
+                $close_button.css('width','20em');
+                $close_button.css('border','1px solid #fff');
+                $close_button.css('background','#ccc');
+                $close_button.css('background','-moz-linear-gradient(90deg, #aaa, #eee)');
+                $close_button.css('-moz-border-radius','8px');
+                $close_button.css('-webkit-border-radius','8px');
+                $close_button.css('left','0');
+                $close_button.css('right','0');
+                $close_button.css('margin','100px auto auto');
+                $close_button.css('border','1px solid #666');
+                var $div = $("<div id='QILVGallery_About_black_screen'/>");
+                $div.css("z-index","49998");
+                $div.css("width","100%");
+                $div.css("height","100%");
+                $div.css("position","fixed");
+                $div.css("left","0");
+                $div.css("top","0");
+                $div.css("background","black");
+                $div.css('z-index','50098');
+                $div.css("opacity","0.8");
+                $("body").append($div);
+                $("body").append($info_tip);
+                var on_click = function(){
+                    $('#QILVGallery_About').remove();
+                    $('#QILVGallery_About_black_screen').remove();
+                }
+                $close_button.click(on_click);
+                $info_tip.append($close_button);
+                $div.click(on_click);
+                // $info_tip.click(on_click);
+            }
+        },
         help : function() {
             var gallery = this;
             if ($('#QILVGallery_Help').length > 0) {
@@ -475,6 +537,7 @@
             "toggle_auto_xy" : "Width and height of the image fit/doesn't fit to width and height of the screen",
             "toggle_black_screen" : "Set or remove the black screen",
             "cycle_transition_time" : "Change transition's effect's time",
+            "about" : "Show/Hide about box",
             "help" : "Show/Hide help box"
         },
         key_bindings : {
@@ -495,7 +558,8 @@
             Z : "toggle_auto_xy",
             B : "toggle_black_screen",
             T : "cycle_transition_time",
-            NUMPAD_MULTIPLY : "help"
+            NUMPAD_MULTIPLY : "help",
+            NUMPAD_DIVIDE : "about"
         },
         __init__ : function() {
         },

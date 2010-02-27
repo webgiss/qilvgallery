@@ -188,13 +188,15 @@
             window.QILVGallery_overlays = _QILVGallery_overlays;
             return this;
         },
-        set_transition_time : function(transition_time) {
+        set_transition_time : function(transition_time, silent) {
             this.transition_time = transition_time;
             var self=this;
             $.each(['prev','next','current'],function(index,element) {
                 self[element].set_transition_time(transition_time);
             });
-            this.create_infotip({content:'Transition\'s effect\'s time : '+transition_time+' ms',fadeOut:0,appendTo:"body",position:"fixed"});
+            if (!silent) {
+                this.create_infotip({content:'Transition\'s effect\'s time : '+transition_time+' ms',fadeOut:0,appendTo:"body",position:"fixed"});
+            }
         },
         cycle_transition_time : function() {
             if (this.transition_time == 0) {
@@ -564,7 +566,7 @@
             }
             this.set_relative(this.relative);
             this.set_black_screen(this.is_black_screen);
-            this.set_transition_time(this.transition_time);
+            this.set_transition_time(this.transition_time, true);
             return self;
         }
     }),

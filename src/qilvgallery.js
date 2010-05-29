@@ -437,6 +437,60 @@
         open_link : function() {
             window.open(this.current.img[0].src);
         },
+        show_preload_gauge : function() {
+            var self = this;
+            if ($("#QILVGallery_preload_gauge").length==0) {
+                var $gauge_container = $("<div id='QILVGallery_preload_gauge' style='z-index:50101;border:1px solid black;width:100%;position:fixed;bottom:0;height:13px;background-color:#eee' />");
+                var $gauge_inner = $("<div id='QILVGallery_preload_gauge_inner' style='z-index:50102;border:0;padding:0;margin:0;width:0%;position:static;left:0;top:0;height:100%;background-color:#f03;text-align:center;font-size:11px;font-family:Arial,Verdana,sans-serif,Helvetica;font-weight:bold;color:#000000' />");
+                $gauge_container.append($gauge_inner);
+                $("body").append($gauge_container);
+                self.update_preload_gauge();
+            }
+        },
+        hide_preload_gauge : function() {
+            $("#QILVGallery_preload_gauge").remove();
+        },
+        update_preload_gauge : function() {
+            if ($("#QILVGallery_preload_gauge").length>0) {
+                var panel = $("#QILVGallery_preload_all_panel")[0];
+                $("#QILVGallery_preload_gauge_inner").css("width",(Math.floor(panel._loaded*100/panel._total))+"%");
+                $("#QILVGallery_preload_gauge_inner").html(panel._loaded+" / "+panel._total);
+                if (panel._loaded == panel._total)
+                {
+                    $("#QILVGallery_preload_gauge").fadeOut(2000,function(){
+                        $(this).remove();
+                    });
+                }
+            }
+        },
+        preload_all : function() {
+            var self = this;
+            if ($("#QILVGallery_preload_all_panel").length==0) {
+                var $panel = $("<div id='QILVGallery_preload_all_panel' style='display:none' />");
+                
+                var $images = $(".QILVGallery_Image");
+                $panel[0]._total = $images.length;
+                $panel[0]._loaded = 0;
+                $images.each(function(index,this_a){
+                    var $img = $("<img src='#'/>");
+                    $img.attr('src',this_a.href);
+                    
+                    $img.load(function(){
+                        $panel[0]._loaded += 1;
+                        self.update_preload_gauge();
+                    })
+                    $panel.append($img);
+                });
+                $("body").append($panel);
+                self.show_preload_gauge();
+            } else {
+                if ($("#QILVGallery_preload_gauge").length==0) {
+                    self.show_preload_gauge();
+                } else {
+                    self.hide_preload_gauge();
+                }
+            }
+        },
         about : function() {
             if ($('#QILVGallery_About').length > 0) {
                 $('#QILVGallery_About').remove();
@@ -539,6 +593,7 @@
             "toggle_auto_xy" : "Width and height of the image fit/doesn't fit to width and height of the screen",
             "toggle_black_screen" : "Set or remove the black screen",
             "cycle_transition_time" : "Change transition's effect's time",
+            "preload_all" : "Pre-load all images (may take some resources)",
             "about" : "Show/Hide about box",
             "help" : "Show/Hide help box"
         },
@@ -560,6 +615,7 @@
             Z : "toggle_auto_xy",
             B : "toggle_black_screen",
             T : "cycle_transition_time",
+            P : "preload_all",
             NUMPAD_MULTIPLY : "help",
             NUMPAD_DIVIDE : "about"
         },

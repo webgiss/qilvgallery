@@ -19,7 +19,7 @@ jQuery ($) ->
                     return null
             )
             keystring += "};"
-        $('#gallery_link').attr('href',"javascript:(function(){if(window.QILVGallery_overlays){window.QILVGallery_overlays.current.show();}else{"+keystring+"window.qilv_prefix_url='"+prefix_url+"';window.qilv_suffix_url='"+suffix_url+"';var n=document.createElement('script');n.type='text/javascript';n.src='"+prefix_url+"loader.js"+suffix_url+"';document.getElementsByTagName('head')[0].appendChild(n);}})();");
+        $('#gallery_link').attr('href',"javascript:(function(){if(window.QILVGallery_overlays){window.QILVGallery_overlays.current.show();}else{"+keystring+"var n=document.createElement('script');n.type='text/javascript';n.src='"+prefix_url+"qilvgallery-total.min.js"+suffix_url+"';document.getElementsByTagName('head')[0].appendChild(n);}})();");
         $('#gallery_link').hide()
         $('#gallery_link').fadeIn('slow')
 

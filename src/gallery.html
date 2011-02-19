@@ -1,8 +1,6 @@
 <html>
 <head>
-<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js' type='text/javascript'></script>
-<script src='VK.js' type='text/javascript'></script>
-<script src='qilvgallery.js' type='text/javascript'></script>
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js' type='text/javascript'></script>
 <style type='text/css'>
 .infopanel,
 .configpanel,
@@ -51,131 +49,19 @@ a
 
 </style>
 <script type='text/javascript'>
-function add_script_ref(src) {
+
+var add_script_ref = function(src) {
     var node = document.createElement('script');
     node.src = src;
     node.type = 'text/javascript';
     document.getElementsByTagName('head')[0].appendChild(node);
 }
 var url_parts = document.URL.split("gallery.html")
-var prefix_url = url_parts[0];
-var suffix_url = url_parts[1];
-add_script_ref(prefix_url+'VK.js'+suffix_url);
-add_script_ref(prefix_url+'qilvgallery.js'+suffix_url);
+var prefix_url = window.qilv_prefix_url = url_parts[0];
+var suffix_url = window.qilv_suffix_url = url_parts[1];
+window.qilv_configuration = true;
+add_script_ref(prefix_url+'loader.js'+suffix_url);
 
-jQuery(function($){
-    var mainurl = prefix_url + "gallery.js" + suffix_url;
-    var setlink = function(keyboard_config) {
-        var keystring = "";
-        if (keyboard_config != undefined) 
-        {
-            keystring = "window.GM_values={";
-            var first = true;
-            $.each(keyboard_config, function(key,value) {
-                if (!first) {
-                    keystring += ",";
-                }
-                first = false;
-                keystring += "'";
-                keystring += key;
-                keystring += "':'";
-                keystring += value;
-                keystring += "'";
-            });
-            keystring += "};";
-        }
-        $('#gallery_link').attr('href',"javascript:(function(){if(window.QILVGallery_overlays){window.QILVGallery_overlays.current.show();}else{addscript=function(src){n=document.createElement('script');n.type='text/javascript';if(src){n.src=src;};document.getElementsByTagName('head')[0].appendChild(n);return n;};"+keystring+"addscript('http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js');addscript('"+prefix_url+"VK.js"+suffix_url+"');addscript('"+prefix_url+"qilvgallery.js"+suffix_url+"');addscript('"+prefix_url+"init.js"+suffix_url+"');}})();");
-        $('#gallery_link').hide();$('#gallery_link').fadeIn('slow');
-        // $('#gallery_link').attr('href',"javascript:(function(){if(window.QILVGallery_overlays){window.QILVGallery_overlays.current.show();}else{gallery_script={};gallery_script.s=document.createElement('script');window.qilv_prefix='"+prefix_url+"';window.qilv_suffix='"+suffix_url+"';gallery_script.s.src='"+mainurl+"';"+keystring+"document.getElementsByTagName('head')[0].appendChild(gallery_script.s);}})();");
-    }
-    var setlink_using_param = function() {
-        var config = {};
-        $.each($('#keyspanel table tr'),function(index,tr) {
-            var key = $(tr).find("td.key select").val();
-            var action = $(tr).find("td.action select").val();
-            if (key != '')
-            {
-                if (QILVGallery_overlays.key_bindings[key] != action)
-                {
-                    config['VK.'+key] = QILVGallery_overlays.__name__ + '.' + action;
-                }
-                
-            }
-            
-        });
-        $.each($('#valuespanel table tr'),function(index,tr) {
-            var name = $(tr).find("td.key select").val();
-            var value = $(tr).find("td.action input").val();
-            if (value.match(/^\-?[0-9]+$/)) { value = parseInt(value);}
-            if (value=='true') { value=true; }
-            if (value=='false') { value=false; }
-            if (QILVGallery_overlays[name] != value)
-            {
-                config['QILV.'+name] = value;
-            }
-        });
-        setlink(config);
-    }
-    var addkeysbuttons = function(keyname,actionname) {
-        var $line = $("<tr><td class='key'></td><td class='action'></td></tr>");
-        $('#keyspanel table').append($line);
-        $line.find('td').css('width','50%');
-        var $combo = $('<select style="width:100%"/>');
-        $line.find('td.key').append($combo);
-        $combo.append($('<option/>').html("-- select a key --").attr('value',''));
-        $.each(VK.keys,function(index,key) {
-            var $option = $('<option/>').html(key).attr('value',key);
-            if (key == keyname)
-            {
-                $option.attr('selected','true');
-            }
-            $combo.append($option);
-        });
-        $combo.change(setlink_using_param);
-        $combo = $('<select style="width:100%"/>');
-        $line.find('td.action').append($combo);
-        $combo.append($('<option/>').html("-- no action --").attr('value',''));
-        $.each(QILVGallery_overlays.bindables,function(value,comment) {
-            var $option = $('<option/>').html(comment).attr('value',value)
-            if (value == actionname)
-            {
-                $option.attr('selected','true');
-            }
-            $combo.append($option);
-        });        
-        $combo.change(setlink_using_param);
-    }
-    var addvaluesbuttons = function(name,value,comment) {
-        var $line = $("<tr><td class='key'></td><td class='action'></td></tr>");
-        $('#valuespanel table').append($line);
-        $line.find('td').css('width','50%');
-        var $combo = $('<select style="width:100%"/>');
-        $line.find('td.key').append($combo);
-        $combo.append($('<option/>').html(comment).attr('value',name));
-        
-        $combo.change(setlink_using_param);
-        $combo = $('<input style="width:100%"/>').html(value).attr('value',value);
-        $line.find('td.action').append($combo);
-        $combo.change(setlink_using_param);
-    }
-    setlink({});
-    $('#keyboardpanel').append("<div id='keyspanel'/>").append("<div id='pluskeyspanel' class='pluspanel'/>");
-    $('#keyspanel').append("<table style='width:100%'></table>");
-    $('#pluskeyspanel').append("<button id='pluskeysbutton' class='plusbutton' type='submit'>+</button>").click(function(){
-        addkeysbuttons();
-        $combo.change(setlink_using_param);
-    });
-    $.each(QILVGallery_overlays.key_bindings,function(key,action) {
-        addkeysbuttons(key,action);
-    });
-    $('#valuepanel').append("<div id='valuespanel'/>");
-    $('#valuespanel').append("<table style='width:100%'></table>");
-    $.each(QILVGallery_overlays.configurables,function(name,comment) {
-        addvaluesbuttons(name,QILVGallery_overlays[name],comment);
-    });
-    setlink_using_param();
-});
-jQuery.noConflict();
 </script>
 </head>
 <body>

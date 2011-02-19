@@ -113,12 +113,8 @@ return VK = window.VK = (
                 return true
         )
 
-        $.each(
-            binding_to_delete
-            (index,keyvalue) => 
-                delete @global_bindings[keyvalue]
-                return true
-        )
+        for keyvalue in binding_to_delete 
+            delete @global_bindings[keyvalue]
 
         $.each(
             target.key_bindings,

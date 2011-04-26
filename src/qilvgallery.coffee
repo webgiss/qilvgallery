@@ -590,7 +590,8 @@ GalleryOverlays = makeClass(
             @current.show()
         else
             @stop_slideshow()
-            @set_black_screen(false)
+            @is_black_screen = false
+            @set_black_screen(@is_black_screen)
             @create_infotip
                 content:'No links to image found in this page !'
                 fadeOut:1500

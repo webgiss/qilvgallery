@@ -586,18 +586,6 @@ GalleryOverlays = makeClass(
         )
     
         @go_num(0)
-        if $link_list.length>0
-            @current.show()
-        else
-            @stop_slideshow()
-            @is_black_screen = false
-            @set_black_screen(@is_black_screen)
-            @create_infotip
-                content:'No links to image found in this page !'
-                fadeOut:1500
-                appendTo:"body"
-                position:"fixed"
-
         VK.auto_bind(@)
         $.each(
             @configurables,
@@ -610,6 +598,18 @@ GalleryOverlays = makeClass(
                     @[keyname] = value
                 return true
         )
+        if $link_list.length>0
+            @current.show()
+        else
+            @stop_slideshow()
+            @is_black_screen = false
+            @set_black_screen(@is_black_screen)
+            @create_infotip
+                content:'No links to image found in this page !'
+                fadeOut:1500
+                appendTo:"body"
+                position:"fixed"
+
         @current.set_max_size(@max_size)
         @prev.set_max_size(@max_size)
         @next.set_max_size(@max_size)

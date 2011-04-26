@@ -135,6 +135,7 @@ GalleryOverlays = makeClass(
     next : null
     current : null
     slideshow_mode : false
+    preload_all_mode : false
     slideshow_dir_next : true
     slideshow_speed : 500
     auto_x : false
@@ -499,6 +500,7 @@ GalleryOverlays = makeClass(
         "slideshow_speed" : "Initial slideshow speed (ms)"
         "transition_time" : "Initial transition's effect's time (ms)"
         "slideshow_mode" : "Slideshow on at start ?"
+        "preload_all_mode" : "Preload all at start ?"
         "max_size" : "Fit the image to the screen if bigger than the screen at start ?"
         "relative" : "Show image at the top of the screen instead of the top of the page at start ?"
         "is_black_screen" : "Show on 'black screen' mode at start ?"
@@ -611,6 +613,7 @@ GalleryOverlays = makeClass(
         @prev.set_max_size(@max_size)
         @next.set_max_size(@max_size)
         @prepare_next_slide() if @slideshow_mode
+        @preload_all() if @preload_all_mode
         
         @set_relative(@relative)
         @set_black_screen(@is_black_screen)

@@ -7504,15 +7504,15 @@ jQuery.each([ "Height", "Width" ], function( i, name ) {
     next: null,
     current: null,
     slideshow_mode: false,
-    preload_all_mode: false,
+    preload_all_mode: true,
     slideshow_dir_next: true,
     slideshow_speed: 500,
     auto_x: false,
     auto_y: false,
-    max_size: false,
+    max_size: true,
     relative: false,
     is_center_on_screen: false,
-    is_black_screen: false,
+    is_black_screen: true,
     transition_time: 0,
     noConflict: function() {
       window.QILVGallery_overlays = _QILVGallery_overlays;
@@ -7963,9 +7963,9 @@ jQuery.each([ "Height", "Width" ], function( i, name ) {
       "help": "Show/Hide help box"
     },
     key_bindings: {
-      LEFT: "go_prev",
+      BACKSPACE: "go_prev",
       J: "go_prev",
-      RIGHT: "go_next",
+      SPACE: "go_next",
       K: "go_next",
       I: "toggle_infobox",
       H: "toggle",

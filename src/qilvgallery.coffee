@@ -626,4 +626,3 @@ GalleryOverlays = makeClass(
 
 _QILVGallery_overlays = window.QILVGallery_overlays
 QILVGallery_overlays = window.QILVGallery_overlays = new GalleryOverlays()
-    

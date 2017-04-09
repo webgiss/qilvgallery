@@ -1,5 +1,5 @@
 WORKING_DIR=../work
-OUTPUT_DIR=../output
+OUTPUT_DIR=../docs
 SRC_DIR=../src
 
 rm -rf "$WORKING_DIR"

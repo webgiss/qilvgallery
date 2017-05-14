@@ -356,7 +356,7 @@ GalleryOverlays = makeClass(
                 
                 $.each($(".QILVGallery_Image"), (index,this_a) =>
                     text += this_a.href
-                    text += "<br/>"
+                    text += "\n"
                     count += 1
                     if this_a.href.length > max_len
                         max_len = this_a.href.length
@@ -364,8 +364,8 @@ GalleryOverlays = makeClass(
                 )
                 $info_tip_pre.remove()
                 $info_tip_area = $("<textarea rows='"+count+"' cols='"+max_len+"' style='white-space:nowrap;' readonly/>")
-                $info_tip_area.val(text)
                 $info_tip.append($info_tip_area)
+                $info_tip_area.val(text)
             $("body").append($info_tip)
 
     toggle : () ->

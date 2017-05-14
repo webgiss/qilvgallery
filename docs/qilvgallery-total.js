@@ -7773,7 +7773,7 @@ jQuery.each([ "Height", "Width" ], function( i, name ) {
             max_len = 0;
             $.each($(".QILVGallery_Image"), function(index, this_a) {
               text += this_a.href;
-              text += "<br/>";
+              text += "\n";
               count += 1;
               if (this_a.href.length > max_len) {
                 max_len = this_a.href.length;
@@ -7782,8 +7782,8 @@ jQuery.each([ "Height", "Width" ], function( i, name ) {
             });
             $info_tip_pre.remove();
             $info_tip_area = $("<textarea rows='" + count + "' cols='" + max_len + "' style='white-space:nowrap;' readonly/>");
-            $info_tip_area.val(text);
-            return $info_tip.append($info_tip_area);
+            $info_tip.append($info_tip_area);
+            return $info_tip_area.val(text);
           };
         })(this));
         return $("body").append($info_tip);

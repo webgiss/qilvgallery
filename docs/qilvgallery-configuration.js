@@ -7775,7 +7775,7 @@ jQuery.each([ "Height", "Width" ], function( i, name ) {
               return true;
             });
             $info_tip_pre.remove();
-            $info_tip_area = $("<input type='textarea' readonly/>");
+            $info_tip_area = $("<textarea readonly/>");
             $info_tip_area.val(text);
             return $info_tip.append($info_tip_area);
           };

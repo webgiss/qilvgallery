@@ -7773,7 +7773,7 @@ jQuery.each([ "Height", "Width" ], function( i, name ) {
             max_len = 0;
             $.each($(".QILVGallery_Image"), function(index, this_a) {
               text += this_a.href;
-              text += "\n";
+              text += "<br/>";
               count += 1;
               if (this_a.href.length > max_len) {
                 max_len = this_a.href.length;

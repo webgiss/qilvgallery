@@ -356,7 +356,7 @@ GalleryOverlays = makeClass(
                 
                 $.each($(".QILVGallery_Image"), (index,this_a) =>
                     text += this_a.href
-                    text += "\n"
+                    text += "<br/>"
                     count += 1
                     if this_a.href.length > max_len
                         max_len = this_a.href.length

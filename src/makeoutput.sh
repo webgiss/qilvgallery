@@ -25,7 +25,7 @@ cp "$SRC_DIR"/gallery.html "$OUTPUT_DIR"/index.html
 sed -e 's/.min././' -i "$OUTPUT_DIR"/qilvgallery-configuration.js
 sed -e 's/.min././' -i "$OUTPUT_DIR"/gallery.html
 sed -e 's/gallery.min.html/index.html/' -i "$OUTPUT_DIR"/index.html
-echo "qilv.gissehel.com" > "$OUTPUT_DIR"/CNAME
+echo -n "qilv.gissehel.com" > "$OUTPUT_DIR"/CNAME
 
 cd "$SRC_DIR"
 

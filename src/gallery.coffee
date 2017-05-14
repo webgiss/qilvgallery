@@ -23,6 +23,9 @@ jQuery ($) ->
         $('#gallery_link').hide()
         $('#gallery_link').fadeIn('slow')
 
+    setlinkname = () ->
+        $('#gallery_link').text($('#namefield').val())
+
     setlink_using_param = () ->
         config = {}
         $('#keyspanel table tr').each (index,tr) ->
@@ -96,6 +99,13 @@ jQuery ($) ->
 
     
     setlink({})
+
+    $('#namepanel')
+        .append("<input id='namefield' style='width:100%'/>")
+
+    $('#namefield')
+        .change(setlinkname)
+        .val($('#gallery_link').text())
     
     $('#keyboardpanel')
         .append("<div id='keyspanel'/>")

@@ -358,8 +358,8 @@ GalleryOverlays = makeClass(
                     text += this_a.href
                     text += "\n"
                     count += 1
-                    if this_a.href.length() > max_len
-                        max_len = this_a.href.length()
+                    if this_a.href.length > max_len
+                        max_len = this_a.href.length
                     return true
                 )
                 $info_tip_pre.remove()

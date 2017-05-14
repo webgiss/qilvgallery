@@ -87,6 +87,8 @@ return VK = window.VK = (
     global_bindings : {}
 
     handle_key : (e) ->
+        if e.ctrlKey or e.shiftKey or e.altKey
+            return 
         if @global_bindings[e.which]?
             [ target, method_name ] = @global_bindings[e.which]
             result = target[method_name]
@@ -99,7 +101,7 @@ return VK = window.VK = (
 
     auto_bind : (target, element) ->
         element = document unless element?
-        element = $(element)
+        $element = $(element)
 
         target.bindables = {} unless target.bindables?
                     
@@ -140,9 +142,9 @@ return VK = window.VK = (
                 return true
         )
 
-        if not(element[0] in @handle_key_elements)
-            @handle_key_elements.push(element[0])
-            element.keydown( (e) => @handle_key(e) )
+        if not($element[0] in @handle_key_elements)
+            @handle_key_elements.push($element[0])
+            $element.keydown( (e) => @handle_key(e) )
 
     reverse : null
 ).init()

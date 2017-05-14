@@ -7274,6 +7274,9 @@ jQuery.each([ "Height", "Width" ], function( i, name ) {
     global_bindings: {},
     handle_key: function(e) {
       var method_name, ref, result, target;
+      if (e.ctrlKey || e.shiftKey || e.altKey) {
+        return;
+      }
       if (this.global_bindings[e.which] != null) {
         ref = this.global_bindings[e.which], target = ref[0], method_name = ref[1];
         result = target[method_name]({
@@ -7285,11 +7288,11 @@ jQuery.each([ "Height", "Width" ], function( i, name ) {
     },
     handle_key_elements: [],
     auto_bind: function(target, element) {
-      var binding_to_delete, i, keyvalue, len, ref;
+      var $element, binding_to_delete, i, keyvalue, len, ref;
       if (element == null) {
         element = document;
       }
-      element = $(element);
+      $element = $(element);
       if (target.bindables == null) {
         target.bindables = {};
       }
@@ -7334,9 +7337,9 @@ jQuery.each([ "Height", "Width" ], function( i, name ) {
           return true;
         };
       })(this));
-      if (!(ref = element[0], indexOf.call(this.handle_key_elements, ref) >= 0)) {
-        this.handle_key_elements.push(element[0]);
-        return element.keydown((function(_this) {
+      if (!(ref = $element[0], indexOf.call(this.handle_key_elements, ref) >= 0)) {
+        this.handle_key_elements.push($element[0]);
+        return $element.keydown((function(_this) {
           return function(e) {
             return _this.handle_key(e);
           };

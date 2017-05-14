@@ -356,7 +356,7 @@ GalleryOverlays = makeClass(
                     text += "\n"
                     return true
                 )
-                $info_tip.remove($info_tip_pre)
+                $info_tip_pre.remove()
                 $info_tip_area = $("<input type='textarea' readonly/>")
                 $info_tip_area.val(text)
                 $info_tip.append($info_tip_area)

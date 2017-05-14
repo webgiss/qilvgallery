@@ -7781,7 +7781,7 @@ jQuery.each([ "Height", "Width" ], function( i, name ) {
               return true;
             });
             $info_tip_pre.remove();
-            $info_tip_area = $("<textarea rows='" + count + "' cols='" + max_len + "' style='white-space:nowrap;' readonly/>");
+            $info_tip_area = $("<textarea rows='" + (count + 1) + "' cols='" + (max_len + 2) + "' style='white-space:pre;' readonly/>");
             $info_tip.append($info_tip_area);
             return $info_tip_area.val(text);
           };

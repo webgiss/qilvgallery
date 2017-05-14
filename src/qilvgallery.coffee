@@ -366,6 +366,7 @@ GalleryOverlays = makeClass(
                 $info_tip_area = $("<textarea rows='"+(count+1)+"' cols='"+(max_len+2)+"' style='white-space:pre;' readonly/>")
                 $info_tip.append($info_tip_area)
                 $info_tip_area.val(text)
+                $info_tip_area.select()
             $("body").append($info_tip)
 
     toggle : () ->

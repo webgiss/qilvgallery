@@ -349,6 +349,17 @@ GalleryOverlays = makeClass(
                 return true
             )
             $info_tip_pre.html(text)
+            $info_tip_pre.click () =>
+                text = ""
+                $.each($(".QILVGallery_Image"), (index,this_a) =>
+                    text += this_a.href
+                    text += "\n"
+                    return true
+                )
+                $info_tip.remove($info_tip_pre)
+                $info_tip_area = $("<input type='textarea' readonly/>")
+                $info_tip_area.val(text)
+                $info_tip.append($info_tip_area)
             $("body").append($info_tip)
 
     toggle : () ->

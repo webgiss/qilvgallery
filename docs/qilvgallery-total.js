@@ -7765,6 +7765,21 @@ jQuery.each([ "Height", "Width" ], function( i, name ) {
           };
         })(this));
         $info_tip_pre.html(text);
+        $info_tip_pre.click((function(_this) {
+          return function() {
+            var $info_tip_area;
+            text = "";
+            $.each($(".QILVGallery_Image"), function(index, this_a) {
+              text += this_a.href;
+              text += "\n";
+              return true;
+            });
+            $info_tip.remove($info_tip_pre);
+            $info_tip_area = $("<input type='textarea' readonly/>");
+            $info_tip_area.val(text);
+            return $info_tip.append($info_tip_area);
+          };
+        })(this));
         return $("body").append($info_tip);
       }
     },

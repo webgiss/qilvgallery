@@ -57,7 +57,7 @@ var add_script_ref = function(src) {
 }
 var url_parts = document.URL.split("index.html")
 var prefix_url = window.qilv_prefix_url = url_parts[0];
-var suffix_url = window.qilv_suffix_url = url_parts[1];
+var suffix_url = window.qilv_suffix_url = url_parts[1] || "";
 window.qilv_configuration = true;
 add_script_ref(prefix_url+'qilvgallery-configuration.min.js'+suffix_url);
 

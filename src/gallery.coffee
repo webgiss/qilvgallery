@@ -105,6 +105,7 @@ jQuery ($) ->
 
     $('#namefield')
         .change(setlinkname)
+        .keyup(setlinkname)
         .val($('#gallery_link').text())
     
     $('#keyboardpanel')

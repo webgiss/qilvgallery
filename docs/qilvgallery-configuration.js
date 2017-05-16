@@ -8221,7 +8221,7 @@ jQuery.each([ "Height", "Width" ], function( i, name ) {
     };
     setlink({});
     $('#namepanel').append("<input id='namefield' style='width:100%'/>");
-    $('#namefield').change(setlinkname).val($('#gallery_link').text());
+    $('#namefield').change(setlinkname).keyup(setlinkname).val($('#gallery_link').text());
     $('#keyboardpanel').append("<div id='keyspanel'/>").append("<div id='pluskeyspanel' class='pluspanel'/>");
     $('#keyspanel').append("<table style='width:100%'></table>");
     $('#pluskeyspanel').append("<button id='pluskeysbutton' class='plusbutton' type='submit'>+</button>").click(function() {

@@ -22,9 +22,9 @@ cp "$SRC_DIR"/gallery.html "$OUTPUT_DIR"/gallery.html
 cp "$SRC_DIR"/gallery.html "$OUTPUT_DIR"/gallery.min.html
 cp "$SRC_DIR"/gallery.html "$OUTPUT_DIR"/index.html
 
-sed -e 's/.min././' -i "$OUTPUT_DIR"/qilvgallery-configuration.js
-sed -e 's/.min././' -i "$OUTPUT_DIR"/gallery.html
-sed -e 's/gallery.min.html/index.html/' -i "$OUTPUT_DIR"/index.html
+sed -e 's/.min././; s/\r//g' -i "$OUTPUT_DIR"/qilvgallery-configuration.js
+sed -e 's/.min././; s/\r//g' -i "$OUTPUT_DIR"/gallery.html
+sed -e 's/gallery.min.html/index.html/; s/\r//g' -i "$OUTPUT_DIR"/index.html
 echo -n "qilv.gissehel.com" > "$OUTPUT_DIR"/CNAME
 
 cd "$SRC_DIR"

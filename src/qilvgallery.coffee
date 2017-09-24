@@ -16,11 +16,13 @@ ImageOverlay = makeClass(
     set_max_size : (max_size) ->
         @max_size = max_size
         if @max_size
-            @img.css("max-width","100%")
-            @img.css("max-height","100%")
+            @img
+                .css("max-width","100%")
+                .css("max-height","100%")
         else
-            @img.css("max-width","")
-            @img.css("max-height","")
+            @img
+                .css("max-width","")
+                .css("max-height","")
 
     set_auto_x : (auto_x) ->
         @auto_x = auto_x
@@ -43,8 +45,9 @@ ImageOverlay = makeClass(
         @img.css("position",@position)
         @img.load(@onload_img)
         @img.attr("current",selector)
-        @img.css("border","2px solid red")
-        @img.css("-moz-box-sizing","border-box")
+        @img
+            .css("border","2px solid red")
+            .css("-moz-box-sizing","border-box")
         @img.attr("src",$(@img.attr("current")).attr("href"))
         @set_auto_x(@auto_x)
         @set_auto_y(@auto_y)
@@ -72,9 +75,10 @@ ImageOverlay = makeClass(
     show : () ->
         @a.attr("accesskey","l")
         if @transition_time > 0
-            @img.css("z-index",50000)
-            @img.css("display","none")
-            @div.css("display","block")
+            @img
+                .css("z-index",50000)
+                .css("display","none")
+                .css("display","block")
             @img.fadeIn( @transition_time,() => )
         else
             @div.css("display","block")
@@ -89,15 +93,17 @@ ImageOverlay = makeClass(
         if @is_centeronscreen then @uncenteronscreen() else @centeronscreen()
 
     centeronscreen : () ->
-        @img.css("right","0")
-        @img.css("bottom","0")
-        @img.css("margin","auto")
+        @img
+            .css("right","0")
+            .css("bottom","0")
+            .css("margin","auto")
         @is_centeronscreen = true
 
     uncenteronscreen : () ->
-        @img.css("right","")
-        @img.css("bottom","")
-        @img.css("margin","")
+        @img
+            .css("right","")
+            .css("bottom","")
+            .css("margin","")
         @is_centeronscreen = false
 
     get_relative : () ->
@@ -194,13 +200,14 @@ GalleryOverlays = makeClass(
         if is_black_screen and ($black_screen.length==0)
             $div = $("<div id='QILVGallery_black_screen'/>")
             $("body").append($div)
-            $div.css("z-index","49998")
-            $div.css("width","100%")
-            $div.css("height","100%")
-            $div.css("position","fixed")
-            $div.css("left","0")
-            $div.css("top","0")
-            $div.css("background","black")
+            $div
+                .css("z-index","49998")
+                .css("width","100%")
+                .css("height","100%")
+                .css("position","fixed")
+                .css("left","0")
+                .css("top","0")
+                .css("background","black")
             
         if (!is_black_screen) && ($black_screen.length>0)
             $black_screen.remove()
@@ -324,12 +331,13 @@ GalleryOverlays = makeClass(
             )
             $(params.appendTo).append($info_tip)
         if params.center? and params.center
-            $info_tip.css("position","fixed")
-            $info_tip.css("left","0")
-            $info_tip.css("right","0")
-            $info_tip.css("top","0")
-            $info_tip.css("bottom","0")
-            $info_tip.css("margin","auto")
+            $info_tip
+                .css("position","fixed")
+                .css("left","0")
+                .css("right","0")
+                .css("top","0")
+                .css("bottom","0")
+                .css("margin","auto")
         return $info_tip
 
     toggle_infobox : () ->
@@ -438,39 +446,48 @@ GalleryOverlays = makeClass(
             $info_tip = @create_infotip
                 id : 'QILVGallery_About'
                 center : true
-            $info_tip.css('font-family','"Trebuchet MS",Tahoma,Verdana,Arial,sans-serif').css('font-size','15pt').css('text-align','center')
-            $info_tip.css('max-width','500px')
-            $info_tip.css('max-height','300px')
-            $info_tip.css('border','1px solid white')
-            $info_tip.css('background','#a2a2a2')
-            $info_tip.css('background','-moz-linear-gradient(90deg,#888,#ddd)')
-            $info_tip.css('background','-webkit-linear-gradient(90deg,#888,#ddd)')
-            $info_tip.css('z-index','50100')
-            $info_tip.append($('<p>QILV Gallery</p>').css('font-size','20pt'))
-            $info_tip.append("<a href='http://code.google.com/p/qilvgallery/' target='_blank'>http://code.google.com/p/qilvgallery/</a>")
-            $info_tip.append($('<br/>'))
+            $info_tip
+                .css('font-family','"Trebuchet MS",Tahoma,Verdana,Arial,sans-serif')
+                .css('font-size','15pt')
+                .css('text-align','center')
+                .css('max-width','500px')
+                .css('max-height','300px')
+                .css('border','1px solid white')
+                .css('background','#a2a2a2')
+                .css('background','-moz-linear-gradient(90deg,#888,#ddd)')
+                .css('background','-webkit-linear-gradient(90deg,#888,#ddd)')
+                .css('z-index','50100')
+            $info_tip
+                .append($('<p>QILV Gallery</p>')
+                .css('font-size','20pt'))
+            $info_tip
+                .append("<a href='http://code.google.com/p/qilvgallery/' target='_blank'>http://code.google.com/p/qilvgallery/</a>")
+            $info_tip
+                .append($('<br/>'))
             $close_button = $('<div>Close</div>')
-            $close_button.css('width','20em')
-            $close_button.css('width','20em')
-            $close_button.css('border','1px solid #fff')
-            $close_button.css('background','#ccc')
-            $close_button.css('background','-moz-linear-gradient(90deg, #aaa, #eee)')
-            $close_button.css('-moz-border-radius','8px')
-            $close_button.css('-webkit-border-radius','8px')
-            $close_button.css('left','0')
-            $close_button.css('right','0')
-            $close_button.css('margin','100px auto auto')
-            $close_button.css('border','1px solid #666')
+            $close_button
+                .css('width','20em')
+                .css('width','20em')
+                .css('border','1px solid #fff')
+                .css('background','#ccc')
+                .css('background','-moz-linear-gradient(90deg, #aaa, #eee)')
+                .css('-moz-border-radius','8px')
+                .css('-webkit-border-radius','8px')
+                .css('left','0')
+                .css('right','0')
+                .css('margin','100px auto auto')
+                .css('border','1px solid #666')
             $div = $("<div id='QILVGallery_About_black_screen'/>")
-            $div.css("z-index","49998")
-            $div.css("width","100%")
-            $div.css("height","100%")
-            $div.css("position","fixed")
-            $div.css("left","0")
-            $div.css("top","0")
-            $div.css("background","black")
-            $div.css('z-index','50098')
-            $div.css("opacity","0.8")
+            $div
+                .css("z-index","49998")
+                .css("width","100%")
+                .css("height","100%")
+                .css("position","fixed")
+                .css("left","0")
+                .css("top","0")
+                .css("background","black")
+                .css('z-index','50098')
+                .css("opacity","0.8")
             $("body").append($div)
             $("body").append($info_tip)
             on_click = () ->

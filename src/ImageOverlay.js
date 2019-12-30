@@ -8,10 +8,12 @@ export default class ImageOverlay {
      * @param {Object} obj
      * @param {DomAccess} obj.domAccess
      * @param {number} obj.index
+     * @param {HTMLElement} obj.element
      */
     constructor({
         domAccess,
-        index
+        index,
+        element,
     }) {
         this._domAccess = domAccess;
         this._index = index;
@@ -24,8 +26,8 @@ export default class ImageOverlay {
             id: `QILVGallery_Overlay_${this._index}`,
             style: 'display:none'
         }, {
-                parent: document.body
-            });
+            parent: element
+        });
 
         this._a = domAccess.createElement('a', null, {
             parent: this._div
@@ -86,8 +88,8 @@ export default class ImageOverlay {
             src: '#',
             style: 'display:block;position:absolute;left:0;top:0;z-index:50000',
         }, {
-                parent: this._a
-            });
+            parent: this._a
+        });
         domAccess.setCssProperty(this._image, 'position', this._position);
         this._image.addEventListener('load', (e) => this.onloadImage());
         this._selector = selector;

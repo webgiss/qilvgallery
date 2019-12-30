@@ -185,7 +185,7 @@ export default class GalleryOverlays {
             return this.createInfoTip({
                 content: `Transition's effect's time : ${transitionTime} ms`,
                 fadeOut: 500,
-                appendTo: document.body,
+                appendTo: this._main_element,
                 position: "fixed"
             });
         }
@@ -231,8 +231,8 @@ export default class GalleryOverlays {
             this._blackScreen = domAccess.createElement('div', {
                 id: 'QILVGallery_black_screen'
             }, {
-                    parent: document.body,
-                });
+                parent: this._main_element,
+            });
             domAccess.setCssProperty(this._blackScreen, 'zIndex', '49998');
             domAccess.setCssProperty(this._blackScreen, 'width', '100%');
             domAccess.setCssProperty(this._blackScreen, 'height', '100%');
@@ -311,7 +311,7 @@ export default class GalleryOverlays {
         this.createInfoTip({
             content: `Speed : ${this._slideshowSpeed} ms`,
             fadeOut: 500,
-            appendTo: document.body,
+            appendTo: this._main_element,
             position: 'fixed'
         });
     }
@@ -387,7 +387,7 @@ export default class GalleryOverlays {
         return this.createInfoTip({
             content: this._maxSize ? 'Max size : 100%' : 'No max size',
             fadeOut: 500,
-            appendTo: document.body,
+            appendTo: this._main_element,
             position: "fixed"
         });
     }
@@ -464,7 +464,7 @@ export default class GalleryOverlays {
             params = {};
         }
         const props = {
-            style: 'display:block;position:absolute;left:4px;top:4px;padding:15px;font-size:13px;background:#e9ecf9;color:#000000;font-family:courier new;border-left:2px solid #9999bb;border-top:2px solid #9999bb;border-right:2px solid #5555aa;border-bottom:2px solid #5555aa;-moz-border-radius:15px;-webkit-border-radius:15px;z-index:50001',
+            className: 'qilvgallery_infotip',
         };
         const features = {};
 
@@ -478,16 +478,14 @@ export default class GalleryOverlays {
             features.html = params.content;
         }
         const infoTip = domAccess.createElement('div', props, features);
+        if (params.classNames) {
+            params.classNames.forEach((name)=>infoTip.classList.add(name));
+        }
         if (params.position) {
             domAccess.setCssProperty(infoTip, "position", params.position);
         }
         if ((params.center != null) && params.center) {
-            domAccess.setCssProperty(infoTip, "position", "fixed");
-            domAccess.setCssProperty(infoTip, "left", "0");
-            domAccess.setCssProperty(infoTip, "right", "0");
-            domAccess.setCssProperty(infoTip, "top", "0");
-            domAccess.setCssProperty(infoTip, "bottom", "0");
-            domAccess.setCssProperty(infoTip, "margin", "auto");
+            infoTip.classList.add('qilvgallery_infotip_center')
         }
         if (params.fadeOut != null) {
             setTimeout(() => domAccess.remove(infoTip), params.fadeOut);
@@ -515,7 +513,7 @@ export default class GalleryOverlays {
             this.removeInfoBox();
         } else {
             this._infoBox = this.createInfoTip({
-                appendTo: document.body,
+                appendTo: this._main_element,
             });
             let info_tip_pre = domAccess.createElement('pre', null, {
                 parent: this._infoBox
@@ -550,14 +548,15 @@ export default class GalleryOverlays {
                 domAccess.remove(info_tip_pre);
                 info_tip_pre = null;
                 let info_tip_area = domAccess.createElement('textarea', {
+                    id: '',
                     rows: `${count + 1}`,
                     cols: `${maxLength + 2}`,
-                    style: 'white-space:pre;',
+                    className: 'qilvgallery_infobox_textarea',
                     readonly: 1,
                     value: text,
                 }, {
-                        parent: this._infoBox,
-                    });
+                    parent: this._infoBox,
+                });
                 info_tip_area.select();
             });
         }
@@ -628,17 +627,16 @@ export default class GalleryOverlays {
     showPreloadGauge() {
         if (!this._preloadGauge) {
             this._preloadGauge = this._domAccess.createElement('div', {
-                id: 'QILVGallery_preload_gauge',
-                style: 'z-index:50101;border:1px solid black;width:100%;position:fixed;bottom:0;height:13px;background-color:#eee',
+                className: 'qilvgallery_preload_gauge',
             }, {
-                    parent: document.body,
-                });
+                parent: this._main_element,
+            });
+
             this._preloadGaugeInner = this._domAccess.createElement('div', {
-                id: 'QILVGallery_preload_gauge_inner',
-                style: 'z-index:50102;border:0;padding:0;margin:0;width:0%;position:static;left:0;top:0;height:100%;background-color:#f03;text-align:center;font-size:11px;font-family:Arial,Verdana,sans-serif,Helvetica;font-weight:bold;color:#000000',
+                className: 'qilvgallery_preload_gauge_inner',
             }, {
-                    parent: this._preloadGauge,
-                });
+                parent: this._preloadGauge,
+            });
             this.updatePreloadGauge();
         }
     }
@@ -676,10 +674,9 @@ export default class GalleryOverlays {
         if (!this._preloadAllPanel) {
             this._preloadAllPanel = domAccess.createElement('div', {
                 id: 'QILVGallery_preload_all_panel',
-                style: 'display:none',
             }, {
-                    parent: document.body,
-                });
+                parent: this._main_element,
+            });
             const images = domAccess.getElementsByClassName('QILVGallery_Image');
             this._preloadAllPanel._total = images.length;
             this._preloadAllPanel._loaded = 0;
@@ -687,8 +684,8 @@ export default class GalleryOverlays {
                 const image = domAccess.createElement('img', {
                     'src': '#'
                 }, {
-                        parent: this._preloadAllPanel
-                    });
+                    parent: this._preloadAllPanel
+                });
                 image.addEventListener('load', (event) => {
                     this._preloadAllPanel._loaded += 1;
                     this.updatePreloadGauge();
@@ -717,45 +714,37 @@ export default class GalleryOverlays {
             this._aboutInfoTipBlackScreen = null;
         } else {
             this._aboutInfoTipBlackScreen = domAccess.createElement('div', {
-                style: 'z-index: 50098; width: 100%; height: 100%; position: fixed; left: 0px; top: 0px; background: black; opacity: 0.8;',
+                className: 'qilvgallery_infotip_about_blackscreen',
             }, {
-                    parent: document.body,
-                });
+                parent: this._main_element,
+            });
             const aboutInfoTip = this._aboutInfoTip = this.createInfoTip({
                 id: 'QILVGallery_About',
                 center: true,
-                appendTo: document.body,
+                appendTo: this._main_element,
+                classNames: ['qilvgallery_infotip_about'],
             });
-            domAccess.setCssProperty(aboutInfoTip, 'fontFamily', '"Trebuchet MS","Tahoma","Verdana","Arial","sans-serif"');
-            domAccess.setCssProperty(aboutInfoTip, 'fontSize', '15pt');
-            domAccess.setCssProperty(aboutInfoTip, 'textAlign', 'center');
-            domAccess.setCssProperty(aboutInfoTip, 'maxWidth', '500px');
-            domAccess.setCssProperty(aboutInfoTip, 'maxHeight', '300px');
-            domAccess.setCssProperty(aboutInfoTip, 'border', '1px solid white');
-            domAccess.setCssProperty(aboutInfoTip, 'background', '#a2a2a2');
-            domAccess.setCssProperty(aboutInfoTip, 'background', 'linear-gradient(90deg,#888,#ddd)');
-            domAccess.setCssProperty(aboutInfoTip, 'zIndex', '50100');
-            const title = domAccess.createElement('p', null, {
+            domAccess.createElement('p', null, {
                 text: 'QILV Gallery',
+                className: 'qilvgallery_infotip_about_title',
                 parent: aboutInfoTip
             });
-            domAccess.setCssProperty(title, 'fontSize', '20pt');
             domAccess.createElement('a', {
                 href: 'https://github.com/gissehel/qilvgallery',
                 target: '_blank'
             }, {
-                    text: 'https://github.com/gissehel/qilvgallery',
-                    parent: aboutInfoTip
-                });
+                text: 'https://github.com/gissehel/qilvgallery',
+                parent: aboutInfoTip
+            });
             domAccess.createElement('br', null, {
                 parent: aboutInfoTip
             });
             const closeButton = domAccess.createElement('div', {
-                style: 'width: 20em; border: 1px solid #666; background: #ccc; border-radius: 8px; background: linear-gradient(90deg, #aaa, #eee); left: 0px; right: 0px; margin: 100px auto auto;',
+                className: 'qilvgallery_infotip_about_button',
             }, {
-                    text: 'Close',
-                    parent: aboutInfoTip
-                });
+                text: 'Close',
+                parent: aboutInfoTip
+            });
             const onClick = () => {
                 domAccess.remove(this._aboutInfoTip);
                 this._aboutInfoTip = null;
@@ -778,20 +767,20 @@ export default class GalleryOverlays {
         } else {
             const help_info_tip = this._helpInfoTip = this.createInfoTip({
                 id: 'QILVGallery_Help',
-                style: 'display: block; position: absolute; left: 4px; top: 4px; padding: 15px; font-size: 10pt; background: rgb(233, 236, 249); color: rgb(0, 0, 0); font-family: "Trebuchet MS", Tahoma, Verdana, Arial, sans-serif; border-width: 2px; border-style: solid; border-color: rgb(153, 153, 187) rgb(85, 85, 170) rgb(85, 85, 170) rgb(153, 153, 187); border-radius: 15px; z-index: 50001; text-align: left;',
-                appendTo: document.body,
+                appendTo: this._main_element,
+                classNames: ['qilvgallery_infotip_help']
             });
             domAccess.createElement('h1', {
-                style: 'font-size: 2em; font-weight: bold;',
+                className: 'qilvgallery_infotip_help_title',
             }, {
-                    text: 'Keyboard configuration',
-                    parent: help_info_tip,
-                })
+                text: 'Keyboard configuration',
+                parent: help_info_tip,
+            })
             let infoTipDiv = domAccess.createElement('div', {
-                style: 'margin-left: 10px;',
+                className: 'qilvgallery_infotip_help_content',
             }, {
-                    parent: help_info_tip,
-                })
+                parent: help_info_tip,
+            })
 
             Object.keys(this._vk.globalBindings).forEach(/** @param {number} key*/(key) => {
                 const value = this._vk.globalBindings[key];
@@ -813,16 +802,16 @@ export default class GalleryOverlays {
                 }
             })
             domAccess.createElement('h1', {
-                style: 'font-size: 2em; font-weight: bold;',
+                className: 'qilvgallery_infotip_help_title',
             }, {
-                    text: 'Values',
-                    parent: help_info_tip,
-                });
+                text: 'Values',
+                parent: help_info_tip,
+            });
             infoTipDiv = domAccess.createElement('div', {
-                style: 'margin-left: 10px;',
+                className: 'qilvgallery_infotip_help_content',
             }, {
-                    parent: help_info_tip,
-                });
+                parent: help_info_tip,
+            });
 
             Object.keys(this._configurables).forEach((attr) => {
                 const comment = this._configurables[attr];
@@ -846,19 +835,165 @@ export default class GalleryOverlays {
     /**
      * @returns {void}
      */
+    _installCss() {
+        const style = document.createElement('style');
+        style.type = 'text/css';
+        style.innerHTML = `
+            .qilvgallery_infotip {
+                display:block;
+                position:absolute;
+                left:4px;
+                top:4px;
+                padding:15px;
+                font-size:13px;
+                background:linear-gradient(180deg, #f8f8f8, #dddddd);
+                color:#000000;
+                font-family:"consolas", "courier new",monospace;
+                border: 2px solid;
+                border-color: #ffffff #f8f8f8 #b8b8b8 #f8f8f8;
+                -moz-border-radius:5px;
+                -webkit-border-radius:5px;
+                border-radius:5px;
+                z-index:50001
+            }
+
+            .qilvgallery_infotip > pre {
+                margin: 0;
+            }
+            .qilvgallery_preload_gauge {
+                z-index:50101;
+                border:1px solid black;
+                width:100%;
+                position:fixed;
+                bottom:0;
+                height:13px;
+                background-color:#eee;
+            }
+            .qilvgallery_preload_gauge_inner {
+                z-index:50102;
+                border:0;
+                padding:0;
+                margin:0;
+                width:0%;
+                position:static;
+                left:0;
+                top:0;
+                height:100%;
+                background-color:#f03;
+                text-align:center;
+                font-size:11px;
+                font-family:Arial,Verdana,sans-serif,Helvetica;
+                font-weight:bold;
+                color:#000000;
+            }
+
+            .qilvgallery_infotip_about_blackscreen {
+                z-index: 50098;
+                width: 100%;
+                height: 100%;
+                position: fixed;
+                left: 0px;
+                top: 0px;
+                background: black;
+                opacity: 0.8;           
+            }
+
+            .qilvgallery_infotip_about_title {
+                fontSize : 20pt;
+            }
+
+            .qilvgallery_infotip_about_button {
+                width: 20em;
+                border: 1px solid #666;
+                background: #ccc;
+                border-radius: 8px;
+                background: linear-gradient(0, #aaa, #eee);
+                left: 0px;
+                right: 0px;
+                margin: 100px auto auto;
+            }
+
+            .qilvgallery_infotip_center {
+                position: fixed;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                margin: auto;
+            }
+    
+            .qilvgallery_infotip_about {
+                font-family: "Trebuchet MS","Tahoma","Verdana","Arial","sans-serif";
+                font-size: 15pt;
+                text-align: center;
+                max-width: 500px;
+                max-height: 300px;
+                border: 1px solid white;
+                background: linear-gradient(180deg, #f8f8f8, #dddddd);
+                z-index: 50100;
+            }
+    
+            .qilvgallery_infotip_help {
+                display: block;
+                position: absolute;
+                left: 4px;
+                top: 4px;
+                padding: 15px;
+                font-size: 13px;
+                border: 1px solid white;
+                background: linear-gradient(180deg, #f8f8f8, #dddddd);
+                color: rgb(0, 0, 0);
+                font-family: "courier new";
+                border-radius: 5px;
+                z-index: 50001;
+            }
+
+            .qilvgallery_infotip_help_title {
+                font-size: 2em;
+                font-weight: bold;
+            }
+
+            .qilvgallery_infotip_help_content {
+                margin-left: 10px;
+            }
+
+            .qilvgallery_infobox_textarea {
+                white-space:pre;
+            }
+
+            #QILVGallery_preload_all_panel {
+                display:none;
+            }
+        `;
+        document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    /**
+     * @returns {void}
+     */
     init() {
         const domAccess = this._domAccess;
+        this._main_element = domAccess.createElement('div', {
+            id: 'QILVGallery_main_element'
+        }, {
+            parent: document.body,
+        });
+
+        this._installCss();
         this._prev = new ImageOverlay({
             domAccess,
-            index: 0
+            index: 0,
+            element: this._main_element,
         });
         this._current = new ImageOverlay({
             domAccess,
-            index: 1
+            index: 1,
+            element: this._main_element,
         });
         this._next = new ImageOverlay({
             domAccess,
-            index: 2
+            index: 2,
+            element: this._main_element,
         });
         let previousLink = null;
         const linkList = domAccess.getElementsByTagName('a').filter((this_a) => {

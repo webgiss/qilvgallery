@@ -17,7 +17,7 @@ export default class ImageOverlayUi {
          */
         this._image = null;
 
-        this._div = domAccess.createElement('div', { style: 'display:none' }, { parent });
+        this._div = domAccess.createElement('div', { className: 'qilvgallery_image_outter' }, { parent });
         this._a = domAccess.createElement('a', null, { parent: this._div });
     }
 
@@ -32,57 +32,60 @@ export default class ImageOverlayUi {
      * @returns {void}
      */
     setIsLoaded() {
-        this._domAccess.setCssProperty(this._image, "border", "2px solid black");
+        this._domAccess.removeClass(this._image, 'loading');
     }
 
     /**
      * @returns {void}
      */
     setLoading() {
-        this._domAccess.setCssProperty(this._image, "border", "2px solid red");
-        this._domAccess.setCssProperty(this._image, "boxSizing", "border-box");
+        this._domAccess.addClass(this._image, 'loading');
     }
 
     /**
      * @param {boolean} maxSize
      */
     setMaxSize(maxSize) {
-        const stringValue = maxSize ? '100%' : '';
-        const domAccess = this._domAccess;
-        domAccess.setCssProperty(this._image, "maxWidth", stringValue);
-        domAccess.setCssProperty(this._image, "maxHeight", stringValue);
+        if (maxSize) {
+            this._domAccess.addClass(this._image, 'maxSize');
+        } else {
+            this._domAccess.removeClass(this._image, 'maxSize');
+        }
     }
 
     /**
      * @param {boolean} autoX
      */
     setAutoX(autoX) {
-        this._domAccess.setCssProperty(this._image, "width", autoX ? '100%' : 'auto');
+        if (autoX) {
+            this._domAccess.addClass(this._image, 'autoX');
+        } else {
+            this._domAccess.removeClass(this._image, 'autoX');
+        }
     }
 
     /**
      * @param {boolean} autoY
      */
     setAutoY(autoY) {
-        this._domAccess.setCssProperty(this._image, "height", autoY ? "100%" : 'auto');
+        if (autoY) {
+            this._domAccess.addClass(this._image, 'autoY');
+        } else {
+            this._domAccess.removeClass(this._image, 'autoY');
+        }
     }
 
     /**
      * @param {string} href
      */
     replaceImage(href) {
-        const domAccess = this._domAccess;
-       
         if (this._image != null) {
             this._image.remove();
         }
 
-        this._image = domAccess.createElement('img', {
-            className: `QILVGallery_Current`,
-            src: '#',
-            style: 'display:block;position:absolute;left:0;top:0;z-index:50000',
-        }, {
-            parent: this._a
+        this._image = this._domAccess.createElement('img', { src: '#' }, {
+            classNames: [ 'qilvgallery_image' ],
+            parent: this._a,
         });
 
         this._image.addEventListener('load', (e) => this.setIsLoaded());
@@ -110,7 +113,7 @@ export default class ImageOverlayUi {
             };
             */
         } else {
-            this._domAccess.setCssProperty(this._div, "display", "none");
+            this._domAccess.removeClass(this._div, 'shown');
         }
     }
 
@@ -127,7 +130,7 @@ export default class ImageOverlayUi {
             })(this));
             */
         } else {
-            this._domAccess.setCssProperty(this._div, "display", "block");
+            this._domAccess.addClass(this._div, 'shown');
         }
     }
 
@@ -135,20 +138,14 @@ export default class ImageOverlayUi {
      * @returns {void}
      */
     centerOnScreen() {
-        const domAccess = this._domAccess;
-        domAccess.setCssProperty(this._image, "right", "0");
-        domAccess.setCssProperty(this._image, "bottom", "0");
-        domAccess.setCssProperty(this._image, "margin", "auto");
+        this._domAccess.addClass(this._image, 'centered');
     }
 
     /**
      * @returns {void}
      */
     unCenterOnScreen() {
-        const domAccess = this._domAccess;
-        domAccess.setCssProperty(this._image, "right", "");
-        domAccess.setCssProperty(this._image, "bottom", "");
-        domAccess.setCssProperty(this._image, "margin", "");
+        this._domAccess.removeClass(this._image, 'centered');
     }
 
     /**
@@ -156,8 +153,11 @@ export default class ImageOverlayUi {
      * @returns {void}
      */
     setRelative(isRelative) {
-        const position = this._position = isRelative ? "fixed" : "absolute";
-        this._domAccess.setCssProperty(this._image, "position", position);
+        if (isRelative) {
+            this._domAccess.addClass(this._image, 'relative');
+        } else {
+            this._domAccess.removeClass(this._image, 'relative');
+        }
     }
 
     /**

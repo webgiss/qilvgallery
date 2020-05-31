@@ -46,7 +46,7 @@ export default class ImageOverlay {
      */
     setAutoX(value) {
         this._autoX = value;
-        this._imageOverlayUi.setMaxSize(this._autoX);
+        this._imageOverlayUi.setAutoX(this._autoX);
     }
 
     /**
@@ -54,7 +54,7 @@ export default class ImageOverlay {
      */
     setAutoY(value) {
         this._autoY = value;
-        this._imageOverlayUi.setMaxSize(this._autoY);
+        this._imageOverlayUi.setAutoY(this._autoY);
     }
 
     /**
@@ -67,6 +67,7 @@ export default class ImageOverlay {
         this.setAutoX(this._autoX);
         this.setAutoY(this._autoY);
         this.setMaxSize(this._maxSize);
+        this.setRelative(this._relative);
 
         if (this._isCenterOnScreen) {
             this.centerOnScreen();
@@ -123,7 +124,7 @@ export default class ImageOverlay {
      * @returns {void}
      */
     unCenterOnScreen() {
-        this._imageOverlayUi.centerOnScreen();
+        this._imageOverlayUi.unCenterOnScreen();
         this._isCenterOnScreen = false;
     }
 
@@ -138,6 +139,13 @@ export default class ImageOverlay {
      * @param {boolean} value
      */
     set relative(value) {
+        this.setRelative(value);
+    }
+    
+    /**
+     * @param {boolean} value
+     */
+    setRelative(value) {
         this._relative = value;
         this._imageOverlayUi.setRelative(this._relative);
     }

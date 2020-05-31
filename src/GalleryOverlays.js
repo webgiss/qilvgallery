@@ -43,7 +43,7 @@ export default class GalleryOverlays {
             "toggleInfoBox": "Show/hide the infobox of image list",
             "toggle": "Show/Hide the current image",
             "openLink": "Open the image in a new window/tab",
-            "startStopSlideshow": "Start/stop the slideshow",
+            "toggleSlideshow": "Start/stop the slideshow",
             "togglePosition": "Show current image at top of the page/top of the screen",
             "speedUpSlideshow": "Increase the slideshow speed",
             "speedDownSlideshow": "Decrease the slideshow speed",
@@ -69,7 +69,7 @@ export default class GalleryOverlays {
             I: "toggleInfoBox",
             H: "toggle",
             L: "openLink",
-            S: "startStopSlideshow",
+            S: "toggleSlideshow",
             R: "togglePosition",
             NUMPAD_ADD: "speedUpSlideshow",
             NUMPAD_SUBSTRACT: "speedDownSlideshow",
@@ -122,7 +122,7 @@ export default class GalleryOverlays {
         /**
          * @type boolean
          */
-        this._autoY = false;
+        this._autoY = true;
         /**
          * @type boolean
          */
@@ -130,7 +130,7 @@ export default class GalleryOverlays {
         /**
          * @type boolean
          */
-        this._relative = false;
+        this._relative = true;
         /**
          * @type boolean
          */
@@ -164,6 +164,42 @@ export default class GalleryOverlays {
     }
 
     /**
+     * @returns {number}
+     */
+    get autoX() {
+        return this._autoX;
+    }
+    
+    /**
+     * @param {number} value
+     * @returns {void}
+     */
+    set autoX(value) {
+        this._autoX = value;
+        this._current.setAutoX(this._autoX);
+        this._prev.setAutoX(this._autoX);
+        this._next.setAutoX(this._autoX);
+    }
+
+    /**
+     * @returns {number}
+     */
+    get autoY() {
+        return this._autoY;
+    }
+    
+    /**
+     * @param {number} value
+     * @returns {void}
+     */
+    set autoY(value) {
+        this._autoY = value;
+        this._current.setAutoY(this._autoY);
+        this._prev.setAutoY(this._autoY);
+        this._next.setAutoY(this._autoY);
+    }
+
+    /**
      * @returns {ImageOverlay[]}
      */
     get ImageOverlays() {
@@ -181,6 +217,21 @@ export default class GalleryOverlays {
         if (!silent) {
             this._galleryOverlaysUi.createTempMessage(`Transition's effect's time : ${transitionTime} ms`, this._mainElement);
         }
+    }
+
+    /**
+     * @returns {number}
+     */
+    get transitionTime() {
+        return this._transitionTime;
+    }
+
+    /**
+     * @param {number} value
+     * @returns {void}
+     */
+    set transitionTime(value) {
+        this.setTransitionTime(value, true);
     }
 
     /**
@@ -226,14 +277,62 @@ export default class GalleryOverlays {
             this._blackScreen = null;
         }
         this.setCenterOnScreen(shouldBlackScreen);
-        this._blackScreenMode = shouldBlackScreen;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    get blackScreenMode() {
+        return this._blackScreenMode;
+    }
+
+    /**
+     * @param {boolean} value
+     */
+    set blackScreenMode(value) {
+        this._blackScreenMode = value;
+        this.setBlackScreen(value);
+    }
+
+    /**
+     * @return {boolean}
+     */
+    get slideshowMode() {
+        return this._slideshowMode;
+    }
+
+    /**
+     * @param {boolean} value
+     */
+    set slideshowMode(value) {
+        this._slideshowMode = value;
+        if (this._slideshowMode) {
+            this.prepareNextSlide();
+        }
+    }
+
+    /**
+     * @return {boolean}
+     */
+    get preloadAllMode() {
+        return this._preloadAllMode;
+    }
+
+    /**
+     * @param {boolean} value
+     */
+    set preloadAllMode(value) {
+        this._preloadAllMode = value;
+        if (this._preloadAllMode) {
+            this.preloadAll({ parent: this._mainElement });
+        }
     }
 
     /**
      * @returns {void}
      */
     showSlideshowSlide() {
-        if (this._slideshowMode) {
+        if (this.slideshowMode) {
             if (this._slideshowDirNext) {
                 this.goNext();
             } else {
@@ -253,27 +352,8 @@ export default class GalleryOverlays {
     /**
      * @returns {void}
      */
-    startSlideshow() {
-        this._slideshowMode = true;
-        this.prepareNextSlide();
-    }
-
-    /**
-     * @returns {void}
-     */
-    stopSlideshow() {
-        this._slideshowMode = false;
-    }
-
-    /**
-     * @returns {void}
-     */
-    startStopSlideshow() {
-        if (this._slideshowMode) {
-            this.stopSlideshow();
-        } else {
-            this.startSlideshow();
-        }
+    toggleSlideshow() {
+        this.slideshowMode = !this.slideshowMode;
     }
 
     /**
@@ -287,8 +367,18 @@ export default class GalleryOverlays {
      * @param {number} value
      */
     set slideshowSpeed(value) {
+        this.setSlideshowSpeed(value, false);
+    }
+
+    /**
+     * @param {number} value
+     * @param {boolean} silent
+     */
+    setSlideshowSpeed(value, silent) {
         this._slideshowSpeed = value;
-        this._galleryOverlaysUi.createTempMessage(`Speed : ${this._slideshowSpeed} ms`, this._mainElement);
+        if (! silent) {
+            this._galleryOverlaysUi.createTempMessage(`Speed : ${this._slideshowSpeed} ms`, this._mainElement);
+        }
     }
 
     /**
@@ -321,7 +411,7 @@ export default class GalleryOverlays {
         this._prev.update(prevId, this._links[prevId].href);
 
         this.removeInfoBox();
-        this.setBlackScreen(this._blackScreenMode);
+        this.setBlackScreen(this.blackScreenMode);
     }
 
     /**
@@ -338,7 +428,7 @@ export default class GalleryOverlays {
         this._next.update(nextId, this._links[nextId].href);
 
         this.removeInfoBox();
-        this.setBlackScreen(this._blackScreenMode);
+        this.setBlackScreen(this.blackScreenMode);
     }
 
     /**
@@ -353,7 +443,7 @@ export default class GalleryOverlays {
         this._next.update(nextId, this._links[nextId].href);
 
         this.removeInfoBox();
-        this.setBlackScreen(this._blackScreenMode);
+        this.setBlackScreen(this.blackScreenMode);
     }
 
     /**
@@ -367,8 +457,21 @@ export default class GalleryOverlays {
      * @param {boolean} value
      */
     set maxSize(value) {
+        setMaxSize(value, false);
+    }
+
+    /**
+     * @param {boolean} value
+     * @param {boolean} silent
+     */
+    setMaxSize(value, silent) {
         this._maxSize = value;
-        this._galleryOverlaysUi.createTempMessage(this._maxSize ? 'Max size : 100%' : 'No max size', this._mainElement);
+        this._current.setMaxSize(this._maxSize);
+        this._prev.setMaxSize(this._maxSize);
+        this._next.setMaxSize(this._maxSize);
+        if (!silent) {
+            this._galleryOverlaysUi.createTempMessage(this._maxSize ? 'Max size : 100%' : 'No max size', this._mainElement);
+        }
     }
 
     /**
@@ -376,48 +479,33 @@ export default class GalleryOverlays {
      */
     toggleMaxSize() {
         this.maxSize = !this.maxSize;
-        this._current.setMaxSize(this.maxSize);
-        this._prev.setMaxSize(this.maxSize);
-        this._next.setMaxSize(this.maxSize);
     }
 
     /**
      * @returns {void}
      */
     toggleAutoX() {
-        this._autoX = !this._autoX;
-        this._current.setAutoX(this._autoX);
-        this._prev.setAutoX(this._autoX);
-        this._next.setAutoX(this._autoX);
+        this.autoX = !this.autoX;
     }
 
     /**
      * @returns {void}
      */
     toggleAutoY() {
-        this._autoY = !this._autoY;
-        this._current.setAutoY(this._autoY);
-        this._prev.setAutoY(this._autoY);
-        this._next.setAutoY(this._autoY);
+        this.autoY = !this.autoY;
     }
 
     /**
      * @returns {void}
      */
     toggleAutoXY() {
-        if (this._autoX || this._autoY) {
-            this._autoX = false;
-            this._autoY = false;
+        if (this.autoX || this.autoY) {
+            this.autoX = false;
+            this.autoY = false;
         } else {
-            this._autoX = true;
-            this._autoY = true;
+            this.autoX = true;
+            this.autoY = true;
         }
-        this._current.setAutoX(this._autoX);
-        this._prev.setAutoX(this._autoX);
-        this._next.setAutoX(this._autoX);
-        this._current.setAutoY(this._autoY);
-        this._prev.setAutoY(this._autoY);
-        this._next.setAutoY(this._autoY);
     }
 
     /**
@@ -462,8 +550,8 @@ export default class GalleryOverlays {
                 this._blackScreen = null;
             }
         } else {
-            if (this._blackScreenMode) {
-                this.setBlackScreen(this._blackScreenMode);
+            if (this.blackScreenMode) {
+                this.setBlackScreen(this.blackScreenMode);
             }
         }
         this._current.toggle();
@@ -473,14 +561,15 @@ export default class GalleryOverlays {
      * @returns {void}
      */
     togglePosition() {
-        this.setRelative(!this._relative);
+        this.relative = !this.relative;
     }
 
     /**
+     * @param {boolean} value
      * @returns {void}
      */
-    setRelative(relative) {
-        this._relative = relative;
+    set relative(value) {
+        this._relative = value;
         this._current.relative = this._relative;
         this._next.relative = this._relative;
         this._prev.relative = this._relative;
@@ -497,7 +586,7 @@ export default class GalleryOverlays {
      * @returns {void}
      */
     toggleBlackScreen() {
-        this.setBlackScreen(!this._blackScreenMode);
+        this.blackScreenMode = !this.blackScreenMode;
     }
 
     /**
@@ -530,9 +619,11 @@ export default class GalleryOverlays {
     }
 
     /**
+     * @param {Object} obj
+     * @param {HTMLElement} obj.parent
      * @returns {void}
      */
-    preloadAll() {
+    preloadAll({ parent }) {
         const hrefs = Object.values(this._links).map((link)=>link.href);
         this._loaded = 0;
         this._totalToLoad = hrefs.length;
@@ -540,7 +631,7 @@ export default class GalleryOverlays {
             this._loaded += 1;
             this.updatePreloadGauge();
         };
-        this._galleryOverlaysUi.ensurePreloadAll({ hrefs, onImageLoaded });
+        this._galleryOverlaysUi.ensurePreloadAll({ hrefs, onImageLoaded, parent });
 
         if (! this._galleryOverlaysUi.hasPreloadGauge) {
             // this.hidePreloadGauge();
@@ -553,7 +644,7 @@ export default class GalleryOverlays {
      * @returns {void}
      */
     about() {
-        if (this._aboutInfoTip) {
+        if (this._aboutInfoBox) {
             if (this._aboutInfoBox != null) {
                 this._galleryOverlaysUi.removeAboutInfoBox(this._aboutInfoBox);
                 this._aboutInfoBox = null;
@@ -605,8 +696,8 @@ export default class GalleryOverlays {
 
             this._helpInfoTip = this._galleryOverlaysUi.createHelpInfoTip({
                 parent: this._mainElement,
-                bindings ,
-                configurations ,
+                bindings,
+                configurations,
             })
         }
     }
@@ -661,8 +752,8 @@ export default class GalleryOverlays {
 
         if (linkList.length == 0) {
             this._galleryOverlaysUi.createTempMessage('No links to image found in this page !', document.body);
-            this.stopSlideshow();
-            this.setBlackScreen(false);
+            this.slideshowMode = false;
+            this.blackScreenMode = false;
             return;
         }
 
@@ -688,21 +779,15 @@ export default class GalleryOverlays {
 
         this._current.show();
 
-        this._current.setMaxSize(this._maxSize);
-        this._prev.setMaxSize(this._maxSize);
-        this._next.setMaxSize(this._maxSize);
-
-        if (this._slideshowMode) {
-            this.prepareNextSlide();
-        }
-
-        if (this._preloadAllMode) {
-            this.preloadAll();
-        }
-
-        this.setRelative(this._relative);
-        this.setBlackScreen(this._blackScreenMode);
-        this.setTransitionTime(this._transitionTime, true);
+        this.preloadAllMode = this._preloadAllMode;
+        this.relative = this._relative;
+        this.autoX = this._autoX;
+        this.autoY = this._autoY;
+        this.setMaxSize(this._maxSize, true);
+        this.blackScreenMode = this._blackScreenMode;
+        this.transitionTime = this._transitionTime;
+        this.slideshowMode = this._slideshowMode;
+        this.setSlideshowSpeed(this._slideshowSpeed, true);
     }
 
     /**

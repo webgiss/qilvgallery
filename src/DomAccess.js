@@ -8,7 +8,6 @@ export default class DomAccess {
      * @param {string} value 
      */
     setCssProperty(element, name, value) {
-        // console.log('setStyle', {element, name, value});
         if (element) {
             element.style[name] = value;
         }
@@ -51,6 +50,8 @@ export default class DomAccess {
      * @param {HTMLElement} features.parent
      * @param {string} features.html
      * @param {string} features.text
+     * @param {Object<string, string>} features.style
+     * @param {string[]} features.classNames
      */
     createElement(name, props, features) {
         const element = document.createElement(name);
@@ -64,21 +65,31 @@ export default class DomAccess {
         if (features) {
             Object.keys(features).forEach((feature) => {
                 switch (feature) {
+                    case 'style': {
+                        const style = features.style;
+                        this.setCssProperties(element, style);
+                    }
+                    break;
+                    case 'classNames': {
+                        const classNames = features.classNames;
+                        element.classList.add(...classNames);
+                    }
+                    break;
                     case 'parent': {
                         const parent = features.parent;
                         if (parent) {
                             parent.appendChild(element);
                         }
                     }
-                        break;
+                    break;
                     case 'html': {
                         this.setHtmlContent(element, features.html);
                     }
-                        break;
+                    break;
                     case 'text': {
                         this.setTextContent(element, features.text);
                     }
-                        break;
+                    break;
                 }
             });
         }
@@ -111,5 +122,29 @@ export default class DomAccess {
      */
     getElementsByTagName(tagName) {
         return [...document.getElementsByTagName(tagName)];
+    }
+
+    /**
+     * 
+     * @param {HTMLElement} element 
+     * @param {string} className 
+     * @returns {void}
+     */
+    addClass(element, className) {
+        if (element) {
+            element.classList.add(className);
+        }
+    }
+
+    /**
+     * 
+     * @param {HTMLElement} element 
+     * @param {string} className 
+     * @returns {void}
+     */
+    removeClass(element, className) {
+        if (element) {
+            element.classList.remove(className);
+        }
     }
 }

@@ -1001,9 +1001,11 @@ export default class GalleryOverlays {
             let ok = false;
             if (link) {
                 [".png", ".gif", ".jpg", ".jpeg"].map((extension) => {
-                    if (link.substr(link.length - extension.length, extension.length).toLowerCase() === extension) {
-                        if (link !== previousLink) {
-                            ok = true;
+                    if (link.indexOf("?") === -1) {
+                        if (link.substr(link.length - extension.length, extension.length).toLowerCase() === extension) {
+                            if (link !== previousLink) {
+                                ok = true;
+                            }
                         }
                     }
                 });

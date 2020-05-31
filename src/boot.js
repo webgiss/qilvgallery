@@ -1,4 +1,6 @@
 import DomAccess from './DomAccess';
+import ImageOverlayFactory from './ImageOverlayFactory';
+import GalleryOverlaysUi from './GalleryOverlaysUi';
 import VK from './VK';
 import GalleryOverlays from './GalleryOverlays';
 
@@ -18,21 +20,24 @@ import GalleryOverlays from './GalleryOverlays';
     /**
      * Initialise QILVGallery_init
      */
-    const QILVGallery_init = () => {
-        if (!window.QILVGallery_overlays) {
+    const QILVGalleryInit = () => {
+        if (!window.QILVGalleryOverlays) {
             /** @type {Object.<string, string>} */
             const config = {};
             const domAccess = new DomAccess();
+            const imageOverlayFactory = new ImageOverlayFactory({ domAccess });
+            const galleryOverlaysUi = new GalleryOverlaysUi({ domAccess });
             const vk = new VK({ config });
-            const QILVGallery_overlays = new GalleryOverlays({
-                domAccess,
+            const galleryOverlays = new GalleryOverlays({
+                imageOverlayFactory,
+                galleryOverlaysUi,
                 vk,
-                config
+                config,
             });
-            window.QILVGallery_overlays = QILVGallery_overlays;
-            QILVGallery_overlays.init();
+            window.QILVGalleryOverlays = galleryOverlays;
+            galleryOverlays.init();
         }
     }
 
-    readyPromise.then(() => QILVGallery_init());
+    readyPromise.then(() => QILVGalleryInit());
 })()

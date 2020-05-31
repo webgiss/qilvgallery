@@ -1,4 +1,4 @@
-import DomAccess from './DomAccess';
+import ImageOverlayUi from './ImageOverlayUi';
 
 /**
  * @class
@@ -6,34 +6,12 @@ import DomAccess from './DomAccess';
 export default class ImageOverlay {
     /**
      * @param {Object} obj
-     * @param {DomAccess} obj.domAccess
-     * @param {number} obj.index
-     * @param {HTMLElement} obj.element
+     * @param {ImageOverlayUi} obj.imageOverlayUi
      */
-    constructor({
-        domAccess,
-        index,
-        element,
-    }) {
-        this._domAccess = domAccess;
-        this._index = index;
-        /**
-         * @type HTMLImageElement
-         */
-        this._image = null;
+    constructor({ imageOverlayUi }) {
+        this._imageOverlayUi = imageOverlayUi;
 
-        this._div = domAccess.createElement('div', {
-            id: `QILVGallery_Overlay_${this._index}`,
-            style: 'display:none'
-        }, {
-            parent: element
-        });
-
-        this._a = domAccess.createElement('a', null, {
-            parent: this._div
-        });
-
-        this._position = "absolute";
+        this.relative = false;
         this._isCenterOnScreen = false;
         this._transitionTime = 0;
 
@@ -41,21 +19,26 @@ export default class ImageOverlay {
     }
 
     /**
-     * @returns {void}
+     * @returns {string}
      */
-    onloadImage() {
-        this._domAccess.setCssProperty(this._image, "border", "2px solid black");
+    get id() {
+        return this._id;
     }
+
+    /**
+     * @param {string} value
+     */
+    set id(value) {
+        this._id = value;
+    }
+
 
     /**
      * @param {boolean} value
      */
     setMaxSize(value) {
         this._maxSize = value;
-        const stringValue = this._maxSize ? '100%' : '';
-        const domAccess = this._domAccess;
-        domAccess.setCssProperty(this._image, "maxWidth", stringValue);
-        domAccess.setCssProperty(this._image, "maxHeight", stringValue);
+        this._imageOverlayUi.setMaxSize(this._maxSize);
     }
 
     /**
@@ -63,7 +46,7 @@ export default class ImageOverlay {
      */
     setAutoX(value) {
         this._autoX = value;
-        this._domAccess.setCssProperty(this._image, "width", this._autoX ? '100%' : 'auto');
+        this._imageOverlayUi.setMaxSize(this._autoX);
     }
 
     /**
@@ -71,48 +54,24 @@ export default class ImageOverlay {
      */
     setAutoY(value) {
         this._autoY = value;
-        this._domAccess.setCssProperty(this._image, "height", this._autoY ? "100%" : 'auto');
+        this._imageOverlayUi.setMaxSize(this._autoY);
     }
 
     /**
-     * @param {string} selector
+     * @param {number} id
+     * @param {string} href
      */
-    update(selector) {
-        if (this._image != null) {
-            this._image.remove();
-        }
-        const domAccess = this._domAccess;
-        this._image = domAccess.createElement('img', {
-            id: `QILVGallery_Current_${this._index}`,
-            className: `QILVGallery_Current`,
-            src: '#',
-            style: 'display:block;position:absolute;left:0;top:0;z-index:50000',
-        }, {
-            parent: this._a
-        });
-        domAccess.setCssProperty(this._image, 'position', this._position);
-        this._image.addEventListener('load', (e) => this.onloadImage());
-        this._selector = selector;
-        const image = document.querySelector(selector);
-        if (image) {
-            const href = image.href;
+    update(id, href) {
+        this.id = id;
+        this._imageOverlayUi.replaceImage(href);
+        this.setAutoX(this._autoX);
+        this.setAutoY(this._autoY);
+        this.setMaxSize(this._maxSize);
 
-            domAccess.setCssProperty(this._image, "border", "2px solid red");
-            domAccess.setCssProperty(this._image, "boxSizing", "border-box");
-            this._image.src = href;
-
-            this.setAutoX(this._autoX);
-            this.setAutoY(this._autoY);
-            this.setMaxSize(this._maxSize);
-
-            this._a.href = href;
-            this._a.target = '_blank';
-
-            if (this._isCenterOnScreen) {
-                this.centerOnScreen();
-            } else {
-                this.unCenterOnScreen();
-            }
+        if (this._isCenterOnScreen) {
+            this.centerOnScreen();
+        } else {
+            this.unCenterOnScreen();
         }
     }
 
@@ -121,21 +80,8 @@ export default class ImageOverlay {
      */
     hide() {
         this._isOn = false;
-        if (this.transition_time > 0) {
-            // Handle transition
-            /*
-            this._image.css("z-index", 50001);
-            this._image.fadeOut(this.transition_time, () => {
-                return function () {
-                    this._div.css("display", "none");
-                    return this._image.css("z-index", 50000);
-                };
-            };
-            */
-        } else {
-            this._domAccess.setCssProperty(this._div, "display", "none");
-        }
-        this._a['accesskey'] = undefined;
+        this._imageOverlayUi.hide(this._transitionTime);
+        this._imageOverlayUi.accessKey = undefined;
     }
 
     /**
@@ -143,18 +89,8 @@ export default class ImageOverlay {
      */
     show() {
         this._isOn = true;
-        this._a['accesskey'] = "l";
-        if (this.transition_time > 0) {
-            // Handle transition
-            /*
-            this._image.css("z-index", 50000).css("display", "none").css("display", "block");
-            return this._image.fadeIn(this.transition_time, (function (_this) {
-                return function () {};
-            })(this));
-            */
-        } else {
-            this._domAccess.setCssProperty(this._div, "display", "block");
-        }
+        this._imageOverlayUi.accessKey = 'l';
+        this._imageOverlayUi.show(this._transitionTime);
     }
 
     /**
@@ -179,10 +115,7 @@ export default class ImageOverlay {
      * @returns {void}
      */
     centerOnScreen() {
-        const domAccess = this._domAccess;
-        domAccess.setCssProperty(this._image, "right", "0");
-        domAccess.setCssProperty(this._image, "bottom", "0");
-        domAccess.setCssProperty(this._image, "margin", "auto");
+        this._imageOverlayUi.centerOnScreen();
         this._isCenterOnScreen = true;
     }
 
@@ -190,10 +123,7 @@ export default class ImageOverlay {
      * @returns {void}
      */
     unCenterOnScreen() {
-        const domAccess = this._domAccess;
-        domAccess.setCssProperty(this._image, "right", "");
-        domAccess.setCssProperty(this._image, "bottom", "");
-        domAccess.setCssProperty(this._image, "margin", "");
+        this._imageOverlayUi.centerOnScreen();
         this._isCenterOnScreen = false;
     }
 
@@ -201,39 +131,36 @@ export default class ImageOverlay {
      * @returns {boolean}
      */
     get relative() {
-        return this._position === "fixed";
+        return this._relative;
     }
 
     /**
      * @param {boolean} value
      */
     set relative(value) {
-        this._position = value ? "fixed" : "absolute";
-        this._domAccess.setCssProperty(this._image, "position", this._position);
+        this._relative = value;
+        this._imageOverlayUi.setRelative(this._relative);
     }
 
     /**
      * @returns {void}
      */
     togglePosition() {
-        this._relative = !(this._relative);
+        this.relative = !(this.relative);
     }
 
     /**
      * @param {number} value 
      */
     setTransitionTime(value) {
-        return this.transition_time = value;
+        return this._transitionTime = value;
     }
 
     /**
      * @returns {string}
      */
     get imageSource() {
-        if (this._image) {
-            return this._image.src;
-        }
-        return null;
+        return this._imageOverlayUi.imageSource;
     }
 }
 

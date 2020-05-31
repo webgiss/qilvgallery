@@ -16,6 +16,18 @@ export default class DomAccess {
     }
 
     /**
+     * @param {HTMLElement} element 
+     * @param {Object.<string, string>} properties
+     */
+    setCssProperties(element, properties) {
+        if (element) {
+            Object.keys(properties).forEach((property) => {
+                this.setCssProperty(element, property, properties[property]);
+            })
+        }
+    }
+
+    /**
      * @param {HTMLElement} element
      * @param {string} content
      */

@@ -43,27 +43,6 @@ export default class ImageOverlayUi {
     }
 
     /**
-     * @param {boolean} maxSize
-     */
-    setMaxSize(maxSize) {
-        this._domAccess.setClass(this._image, 'maxSize', maxSize);
-    }
-
-    /**
-     * @param {boolean} autoX
-     */
-    setAutoX(autoX) {
-        this._domAccess.setClass(this._image, 'autoX', autoX);
-    }
-
-    /**
-     * @param {boolean} autoY
-     */
-    setAutoY(autoY) {
-        this._domAccess.setClass(this._image, 'autoY', autoY);
-    }
-
-    /**
      * @param {string} href
      */
     replaceImage(href) {
@@ -88,60 +67,15 @@ export default class ImageOverlayUi {
     /**
      * @returns {void}
      */
-    hide(transitionTime) {
-        if (transitionTime > 0) {
-            // Handle transition
-            /*
-            this._image.css("z-index", 50001);
-            this._image.fadeOut(transitionTime, () => {
-                return function () {
-                    this._div.css("display", "none");
-                    return this._image.css("z-index", 50000);
-                };
-            };
-            */
-        } else {
-            this._domAccess.removeClass(this._div, 'shown');
-        }
+    hide() {
+        this._domAccess.removeClass(this._div, 'shown');
     }
 
     /**
      * @returns {void}
      */
-    show(transitionTime) {
-        if (transitionTime > 0) {
-            // Handle transition
-            /*
-            this._image.css("z-index", 50000).css("display", "none").css("display", "block");
-            return this._image.fadeIn(transitionTime, (function (_this) {
-                return function () {};
-            })(this));
-            */
-        } else {
-            this._domAccess.addClass(this._div, 'shown');
-        }
-    }
-
-    /**
-     * @returns {void}
-     */
-    centerOnScreen() {
-        this._domAccess.addClass(this._image, 'centered');
-    }
-
-    /**
-     * @returns {void}
-     */
-    unCenterOnScreen() {
-        this._domAccess.removeClass(this._image, 'centered');
-    }
-
-    /**
-     * @param {boolean} isRelative
-     * @returns {void}
-     */
-    setRelative(isRelative) {
-        this._domAccess.setClass(this._image, 'relative', isRelative);
+    show() {
+        this._domAccess.addClass(this._div, 'shown');
     }
 
     /**

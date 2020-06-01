@@ -212,7 +212,7 @@ export default class GalleryOverlays {
      */
     setTransitionTime(transitionTime, silent) {
         this._transitionTime = transitionTime;
-        this.ImageOverlays.forEach((element) => element.setTransitionTime(transitionTime));
+        this._galleryOverlaysUi.setTransition({ element: this._viewer, transitionTime })
 
         if (!silent) {
             this.createTempMessage(`Transition's effect's time : ${transitionTime} ms`);
@@ -752,7 +752,7 @@ export default class GalleryOverlays {
         let previousHref = null;
 
         const linkList = this._galleryOverlaysUi.getLinkRefs().filter((linkRef) => {
-            const {element, href} = linkRef;
+            const { href } = linkRef;
             let ok = false;
             if (href) {
                 [".png", ".gif", ".jpg", ".jpeg"].map((extension) => {

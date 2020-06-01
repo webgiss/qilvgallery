@@ -448,6 +448,17 @@ export default class GalleryOverlaysUi {
     }
 
     /**
+     * 
+     * @param {Object} obj
+     * @param {HTMLElement} element
+     * @param {number} transitionTime
+     */
+    setTransition({ element, transitionTime }) {
+        this._domAccess.removeClassStartingWith(element, 'qilv_transition-');
+        this._domAccess.addClass(element, `qilv_transition-${transitionTime}`);
+    }
+
+    /**
      * @returns {void}
      */
     installCss() {
@@ -467,6 +478,7 @@ export default class GalleryOverlaysUi {
             }
 
             #qilvgallery_viewer.shown {
+                z-index: 50001 !important;
                 display: block !important;
             }
 
@@ -606,10 +618,30 @@ export default class GalleryOverlaysUi {
                 margin: 0 !important;
                 padding: 0 !important;
                 border: 0 !important;
-                display: none !important;
+                position: absolute !important;
+                display:block !important;
+                opacity: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                top: 0 !important;
+                bottom: 0 !important;
+                transition: opacity ease-out;
+                transition-duration: 0s;
             }
 
+            .qilv_transition-300 .qilvgallery_image_outter {
+                transition-duration: 0.3s;
+            }
+            .qilv_transition-800 .qilvgallery_image_outter {
+                transition-duration: 0.8s;
+            }
+            .qilv_transition-1500 .qilvgallery_image_outter {
+                transition-duration: 1.5s;
+            }
+
+
             .qilvgallery_image_outter.shown {
+                opacity: 1 !important;
                 display: block !important;
             }
  
@@ -626,26 +658,22 @@ export default class GalleryOverlaysUi {
                 right: unset !important;
                 bottom: unset !important;
                 margin: unset !important;
-                position: absolute !important;
                 width: auto !important;
                 height: auto !important;
                 maxWidth: unset !important;
                 maxHeight: unset !important;
             }
 
-            .maxSize .qilvgallery_image,
-            .qilvgallery_image.maxSize {
+            .maxSize .qilvgallery_image {
                 maxWidth: 100% !important;
                 maxHeight: 100% !important;
             }
 
-            .autoX .qilvgallery_image,
-            .qilvgallery_image.autoX {
+            .autoX .qilvgallery_image {
                 width: 100% !important;
             }
 
-            .autoY .qilvgallery_image,
-            .qilvgallery_image.autoY {
+            .autoY .qilvgallery_image {
                 height: 100% !important;
             }
 
@@ -653,16 +681,10 @@ export default class GalleryOverlaysUi {
                 border: 2px solid red !important;
             }
             
-            .centered .qilvgallery_image,
-            .qilvgallery_image.centered {
+            .centered .qilvgallery_image {
                 right: 0 !important;
                 bottom: 0 !important;
                 margin: auto !important;
-            }
-            
-            .relative .qilvgallery_image,
-            .qilvgallery_image.relative {
-                position: fixed !important;
             }
             
             #qilvgallery_preload_all_panel {

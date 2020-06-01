@@ -165,4 +165,21 @@ export default class DomAccess {
             
         }
     }
+
+    /**
+     * 
+     * @param {HTMLElement} element 
+     * @param {string} className 
+     * @returns {void}
+     */
+    removeClassStartingWith(element, classNamePrefix) {
+        if (element) {
+            [...element.classList].filter((className) => className.startsWith(classNamePrefix)).forEach((className) => {
+                element.classList.remove(className);
+            });
+        }
+    }
+
+
 }
+

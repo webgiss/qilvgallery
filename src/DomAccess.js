@@ -147,4 +147,22 @@ export default class DomAccess {
             element.classList.remove(className);
         }
     }
+
+    /**
+     * 
+     * @param {HTMLElement} element
+     * @param {string} className
+     * @param {boolean} isPresent : true if the className should be present
+     * @returns {void}
+     */
+    setClass(element, className, isPresent) {
+        if (element) {
+            if (isPresent) {
+                element.classList.add(className);
+            } else {
+                element.classList.remove(className);
+            }
+            
+        }
+    }
 }

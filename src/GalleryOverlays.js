@@ -134,7 +134,7 @@ export default class GalleryOverlays {
         /**
          * @type boolean
          */
-        this._isCenterOnScreen = false;
+        this._centered = false;
         /**
          * @type boolean
          */
@@ -147,6 +147,10 @@ export default class GalleryOverlays {
          * @type HTMLElement
          */
         this._blackScreen = null;
+        /**
+         * @type boolean
+         */
+        this._shown = true;
     }
 
     /**
@@ -176,9 +180,7 @@ export default class GalleryOverlays {
      */
     set autoX(value) {
         this._autoX = value;
-        this._current.setAutoX(this._autoX);
-        this._prev.setAutoX(this._autoX);
-        this._next.setAutoX(this._autoX);
+        this._galleryOverlaysUi.setAutoX({ element: this._viewer, autoX: this._autoX });
     }
 
     /**
@@ -194,9 +196,7 @@ export default class GalleryOverlays {
      */
     set autoY(value) {
         this._autoY = value;
-        this._current.setAutoY(this._autoY);
-        this._prev.setAutoY(this._autoY);
-        this._next.setAutoY(this._autoY);
+        this._galleryOverlaysUi.setAutoY({ element: this._viewer, autoY: this._autoY });
     }
 
     /**
@@ -215,8 +215,12 @@ export default class GalleryOverlays {
         this.ImageOverlays.forEach((element) => element.setTransitionTime(transitionTime));
 
         if (!silent) {
-            this._galleryOverlaysUi.createTempMessage(`Transition's effect's time : ${transitionTime} ms`, this._mainElement);
+            this.createTempMessage(`Transition's effect's time : ${transitionTime} ms`);
         }
+    }
+
+    createTempMessage(message) {
+        this._galleryOverlaysUi.createTempMessage(message, this._mainElement);
     }
 
     /**
@@ -252,31 +256,33 @@ export default class GalleryOverlays {
     }
 
     /**
-     * @param {boolean} shouldCenterOnScreen
+     * @returns {boolean}
      */
-    setCenterOnScreen(shouldCenterOnScreen) {
-        this.ImageOverlays.forEach((element) => {
-            if (shouldCenterOnScreen) {
-                element.centerOnScreen();
-            } else {
-                element.unCenterOnScreen();
-            }
-        });
-        this._isCenterOnScreen = shouldCenterOnScreen;
+    get centered() {
+        return this._centered;
     }
 
     /**
-     * @param {boolean} shouldBlackScreen
+     * @param {boolean} value
+     * @returns {void}
      */
-    setBlackScreen(shouldBlackScreen) {
-        if (shouldBlackScreen && (!this._blackScreen)) {
-            this._blackScreen = this._galleryOverlaysUi.createBlackScreen({parent: this._mainElement});
+    set centered(value) {
+        this._centered = value;
+        this._galleryOverlaysUi.setCentered({ element : this._viewer, centered: this._centered });
+    }
+
+    /**
+     * @param {boolean} value
+     */
+    setBlackScreenMode(value) {
+        if (value && (!this._blackScreen)) {
+            this._blackScreen = this._galleryOverlaysUi.createBlackScreen({ parent: this._viewer });
         }
-        if ((!shouldBlackScreen) && (this._blackScreen)) {
+        if ((!value) && (this._blackScreen)) {
             this._galleryOverlaysUi.removeBlackScreen(this._blackScreen);
             this._blackScreen = null;
         }
-        this.setCenterOnScreen(shouldBlackScreen);
+        this.centered = value;
     }
 
     /**
@@ -291,7 +297,7 @@ export default class GalleryOverlays {
      */
     set blackScreenMode(value) {
         this._blackScreenMode = value;
-        this.setBlackScreen(value);
+        this.setBlackScreenMode(value);
     }
 
     /**
@@ -326,6 +332,21 @@ export default class GalleryOverlays {
         if (this._preloadAllMode) {
             this.preloadAll({ parent: this._mainElement });
         }
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    get shown() {
+        return this._shown;
+    }
+
+    /**
+     * @params {boolean} value
+     */
+    set shown(value) {
+        this._shown = value;
+        this._galleryOverlaysUi.setShown({ element: this._viewer, shown: this._shown })
     }
 
     /**
@@ -377,7 +398,7 @@ export default class GalleryOverlays {
     setSlideshowSpeed(value, silent) {
         this._slideshowSpeed = value;
         if (! silent) {
-            this._galleryOverlaysUi.createTempMessage(`Speed : ${this._slideshowSpeed} ms`, this._mainElement);
+            this.createTempMessage(`Speed : ${this._slideshowSpeed} ms`);
         }
     }
 
@@ -410,8 +431,8 @@ export default class GalleryOverlays {
         const prevId = this._links[currentId].prevId;
         this._prev.update(prevId, this._links[prevId].href);
 
-        this.removeInfoBox();
-        this.setBlackScreen(this.blackScreenMode);
+        this.removeBoxes();
+        this.shown = true;
     }
 
     /**
@@ -427,8 +448,8 @@ export default class GalleryOverlays {
         const nextId = this._links[currentId].nextId;
         this._next.update(nextId, this._links[nextId].href);
 
-        this.removeInfoBox();
-        this.setBlackScreen(this.blackScreenMode);
+        this.removeBoxes();
+        this.shown = true;
     }
 
     /**
@@ -442,8 +463,17 @@ export default class GalleryOverlays {
         this._prev.update(prevId, this._links[prevId].href);
         this._next.update(nextId, this._links[nextId].href);
 
+        this.removeBoxes();
+        this.shown = true;
+    }
+
+    /**
+     * @returns {void}
+     */
+    removeBoxes() {
         this.removeInfoBox();
-        this.setBlackScreen(this.blackScreenMode);
+        this.removeAbout();
+        this.removeHelp();
     }
 
     /**
@@ -466,11 +496,12 @@ export default class GalleryOverlays {
      */
     setMaxSize(value, silent) {
         this._maxSize = value;
-        this._current.setMaxSize(this._maxSize);
-        this._prev.setMaxSize(this._maxSize);
-        this._next.setMaxSize(this._maxSize);
+        this._galleryOverlaysUi.setMaxSize({ element: this._viewer, maxSize: this._maxSize });
+        // this._current.setMaxSize(this._maxSize);
+        // this._prev.setMaxSize(this._maxSize);
+        // this._next.setMaxSize(this._maxSize);
         if (!silent) {
-            this._galleryOverlaysUi.createTempMessage(this._maxSize ? 'Max size : 100%' : 'No max size', this._mainElement);
+            this.createTempMessage(`Speed : ${this._slideshowSpeed} ms`);
         }
     }
 
@@ -544,17 +575,7 @@ export default class GalleryOverlays {
      * @returns {void}
      */
     toggle() {
-        if (this._current.isOn) {
-            if (this._blackScreen) {
-                this._galleryOverlaysUi.removeBlackScreen(this._blackScreen);
-                this._blackScreen = null;
-            }
-        } else {
-            if (this.blackScreenMode) {
-                this.setBlackScreen(this.blackScreenMode);
-            }
-        }
-        this._current.toggle();
+        this.shown = !this.shown;
     }
 
     /**
@@ -570,16 +591,17 @@ export default class GalleryOverlays {
      */
     set relative(value) {
         this._relative = value;
-        this._current.relative = this._relative;
-        this._next.relative = this._relative;
-        this._prev.relative = this._relative;
+        this._galleryOverlaysUi.setRelative({ element: this._viewer, relative: this._relative });
+        // this._current.relative = this._relative;
+        // this._next.relative = this._relative;
+        // this._prev.relative = this._relative;
     }
 
     /**
      * @returns {boolean}
      */
     get relative() {
-        return this._current.relative;
+        return this._relative;
     }
 
     /**
@@ -645,18 +667,12 @@ export default class GalleryOverlays {
      */
     about() {
         if (this._aboutInfoBox) {
-            if (this._aboutInfoBox != null) {
-                this._galleryOverlaysUi.removeAboutInfoBox(this._aboutInfoBox);
-                this._aboutInfoBox = null;
-            }
+            this.removeAbout();
         } else {
             this._aboutInfoBox = this._galleryOverlaysUi.createAboutInfoBox({
                 parent: this._mainElement,
                 onClick: () => {
-                    if (this._aboutInfoBox != null) {
-                        this._galleryOverlaysUi.removeAboutInfoBox(this._aboutInfoBox);
-                        this._aboutInfoBox = null;
-                    }
+                    this.removeAbout();
                 }
             })
         }
@@ -665,10 +681,19 @@ export default class GalleryOverlays {
     /**
      * @returns {void}
      */
+    removeAbout() {
+        if (this._aboutInfoBox != null) {
+            this._galleryOverlaysUi.removeAboutInfoBox(this._aboutInfoBox);
+            this._aboutInfoBox = null;
+        }
+    }
+
+    /**
+     * @returns {void}
+     */
     help() {
         if (this._helpInfoTip) {
-            this._galleryOverlaysUi.removeHelpInfoTip(this._helpInfoTip)
-            this._helpInfoTip = null;
+            this.removeHelp();
         } else {
             /** @type {{keyName: string, methodName: string}[]} */
             const bindings = [];
@@ -705,13 +730,24 @@ export default class GalleryOverlays {
     /**
      * @returns {void}
      */
+    removeHelp() {
+        if (this._helpInfoTip) {
+            this._galleryOverlaysUi.removeHelpInfoTip(this._helpInfoTip)
+            this._helpInfoTip = null;
+        }
+    }
+
+    /**
+     * @returns {void}
+     */
     init() {
         this._mainElement = this._galleryOverlaysUi.createMainElement();
+        this._viewer = this._galleryOverlaysUi.createViewer({ parent: this._mainElement });
         this._galleryOverlaysUi.installCss();
 
-        this._prev = this._imageOverlayFactory.createImageOverylay(this._mainElement);
-        this._current = this._imageOverlayFactory.createImageOverylay(this._mainElement);
-        this._next = this._imageOverlayFactory.createImageOverylay(this._mainElement);
+        this._prev = this._imageOverlayFactory.createImageOverylay(this._viewer);
+        this._current = this._imageOverlayFactory.createImageOverylay(this._viewer);
+        this._next = this._imageOverlayFactory.createImageOverylay(this._viewer);
         
         let previousHref = null;
 
@@ -784,10 +820,12 @@ export default class GalleryOverlays {
         this.autoX = this._autoX;
         this.autoY = this._autoY;
         this.setMaxSize(this._maxSize, true);
+        this.centered = this._centered;
         this.blackScreenMode = this._blackScreenMode;
         this.transitionTime = this._transitionTime;
         this.slideshowMode = this._slideshowMode;
         this.setSlideshowSpeed(this._slideshowSpeed, true);
+        this.shown = this._shown;
     }
 
     /**

@@ -46,33 +46,21 @@ export default class ImageOverlayUi {
      * @param {boolean} maxSize
      */
     setMaxSize(maxSize) {
-        if (maxSize) {
-            this._domAccess.addClass(this._image, 'maxSize');
-        } else {
-            this._domAccess.removeClass(this._image, 'maxSize');
-        }
+        this._domAccess.setClass(this._image, 'maxSize', maxSize);
     }
 
     /**
      * @param {boolean} autoX
      */
     setAutoX(autoX) {
-        if (autoX) {
-            this._domAccess.addClass(this._image, 'autoX');
-        } else {
-            this._domAccess.removeClass(this._image, 'autoX');
-        }
+        this._domAccess.setClass(this._image, 'autoX', autoX);
     }
 
     /**
      * @param {boolean} autoY
      */
     setAutoY(autoY) {
-        if (autoY) {
-            this._domAccess.addClass(this._image, 'autoY');
-        } else {
-            this._domAccess.removeClass(this._image, 'autoY');
-        }
+        this._domAccess.setClass(this._image, 'autoY', autoY);
     }
 
     /**
@@ -153,11 +141,7 @@ export default class ImageOverlayUi {
      * @returns {void}
      */
     setRelative(isRelative) {
-        if (isRelative) {
-            this._domAccess.addClass(this._image, 'relative');
-        } else {
-            this._domAccess.removeClass(this._image, 'relative');
-        }
+        this._domAccess.setClass(this._image, 'relative', isRelative);
     }
 
     /**

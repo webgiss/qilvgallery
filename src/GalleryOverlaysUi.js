@@ -347,7 +347,14 @@ export default class GalleryOverlaysUi {
         return this._domAccess.createElement('div', { id: 'qilvgallery_main_element' }, { parent: document.body });
     }
 
-
+    /**
+     * @param {Object} obj
+     * @param {HTMLElement} obj.parent
+     * @returns {HTMLElement}
+     */
+    createViewer({ parent }) {
+        return this._domAccess.createElement('div', { id: 'qilvgallery_viewer' }, { parent });
+    }
 
     /**
      * @returns {{href: string, element: HTMLElement}[]}
@@ -363,9 +370,81 @@ export default class GalleryOverlaysUi {
      * @param {string}  obj.id
      * @returns {void}
      */
-    setImageRef({element, id}) {
-        element.classList.add('qilvgallery_source_image');
-        element.classList.add(`qilvgallery_source_image_${id}`);
+    setImageRef({ element, id }) {
+        this._domAccess.addClass(element, 'qilvgallery_source_image');
+        this._domAccess.addClass(element, `qilvgallery_source_image_${id}`);
+    }
+
+
+    /**
+     * 
+     * @param {Object} obj
+     * @param {HTMLElement} obj.element
+     * @param {boolean} obj.relative
+     */
+    setRelative({ element, relative }) {
+        this._domAccess.setClass(element, 'relative', relative);
+    }
+
+    /**
+     * 
+     * @param {Object} obj
+     * @param {HTMLElement} obj.element
+     * @param {boolean} obj.autoX
+     */
+    setAutoX({ element, autoX }) {
+        this._domAccess.setClass(element, 'autoX', autoX);
+    }
+
+    /**
+     * 
+     * @param {Object} obj
+     * @param {HTMLElement} obj.element
+     * @param {boolean} obj.autoY
+     */
+    setAutoY({ element, autoY }) {
+        this._domAccess.setClass(element, 'autoY', autoY);
+    }
+
+    /**
+     * 
+     * @param {Object} obj
+     * @param {HTMLElement} obj.element
+     * @param {boolean} obj.autoY
+     */
+    setAutoY({ element, autoY }) {
+        this._domAccess.setClass(element, 'autoY', autoY);
+    }
+
+    /**
+     * 
+     * @param {Object} obj
+     * @param {HTMLElement} obj.element
+     * @param {boolean} obj.centered
+     */
+    setCentered({ element, centered }) {
+        this._domAccess.setClass(element, 'centered', centered);
+    }
+
+    /**
+     * 
+     * @param {Object} obj
+     * @param {HTMLElement} obj.element
+     * @param {boolean} obj.maxSize
+     */
+    setMaxSize({ element, maxSize }) {
+        this._domAccess.setClass(element, 'maxSize', maxSize);
+    }
+
+
+    /**
+     * 
+     * @param {Object} obj
+     * @param {HTMLElement} obj.element
+     * @param {boolean} obj.shown
+     */
+    setShown({ element, shown }) {
+        this._domAccess.setClass(element, 'shown', shown);
     }
 
     /**
@@ -376,15 +455,23 @@ export default class GalleryOverlaysUi {
         style.type = 'text/css';
         style.innerHTML = `
 
-            #qilvgallery_main_element {
-                position: absolute;
-                z-index: 50000;
-                display: block;
-                top: 0;
-                bottom: 0;
-                margin: 0;
-                left: 0;
-                right: 0;                
+            #qilvgallery_viewer {
+                position: absolute !important;
+                z-index: 50000 !important;
+                display: none !important;
+                top: 0 !important;
+                bottom: 0 !important;
+                margin: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+            }
+
+            #qilvgallery_viewer.shown {
+                display: block !important;
+            }
+
+            #qilvgallery_viewer.relative {
+                position: fixed !important;
             }
 
             .qilvgallery_infotip {
@@ -546,15 +633,18 @@ export default class GalleryOverlaysUi {
                 maxHeight: unset !important;
             }
 
+            .maxSize .qilvgallery_image,
             .qilvgallery_image.maxSize {
                 maxWidth: 100% !important;
                 maxHeight: 100% !important;
             }
 
+            .autoX .qilvgallery_image,
             .qilvgallery_image.autoX {
                 width: 100% !important;
             }
 
+            .autoY .qilvgallery_image,
             .qilvgallery_image.autoY {
                 height: 100% !important;
             }
@@ -563,12 +653,14 @@ export default class GalleryOverlaysUi {
                 border: 2px solid red !important;
             }
             
+            .centered .qilvgallery_image,
             .qilvgallery_image.centered {
                 right: 0 !important;
                 bottom: 0 !important;
                 margin: auto !important;
             }
             
+            .relative .qilvgallery_image,
             .qilvgallery_image.relative {
                 position: fixed !important;
             }
@@ -581,7 +673,6 @@ export default class GalleryOverlaysUi {
                 z-index: 49998;
                 width: 100%;
                 height: 100%;
-                position: fixed;
                 left: 0;
                 top: 0;
                 background: black;

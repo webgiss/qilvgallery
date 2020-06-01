@@ -23,7 +23,7 @@ import GalleryOverlays from './GalleryOverlays';
     const QILVGalleryInit = () => {
         if (!window.QILVGalleryOverlays) {
             /** @type {Object.<string, string>} */
-            const config = {};
+            const config = window.QILV_config || window.GM_values || {};
             const domAccess = new DomAccess();
             const imageOverlayFactory = new ImageOverlayFactory({ domAccess });
             const galleryOverlaysUi = new GalleryOverlaysUi({ domAccess });

@@ -543,7 +543,7 @@ export default class GalleryOverlays {
      * @returns {boolean}
      */
     isCurrent(href) {
-        this._current.imageSource === href;
+        return this._current.imageSource === href;
     }
 
     /**

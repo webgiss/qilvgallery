@@ -25,11 +25,15 @@ jobs:
       - name: Build with yarn
         run: yarn build
 
+      - name: Setup fqdn
+        run: echo "qilv.gissehel.com" > CNAME
+
       - name: Deploy to GitHub Pages
         if: success()
         uses: crazy-max/ghaction-github-pages@v2
         with:
           target_branch: gh-pages
           build_dir: dist
+          fqdn: CNAME
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}

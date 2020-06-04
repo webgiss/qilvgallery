@@ -25,8 +25,11 @@ jobs:
       - name: Build with yarn
         run: yarn build
 
+      - name: Create main page
+        run: echo "<html><head><script src='//config.js'></script></head></html>" > dist/index.html
+
       - name: Setup fqdn
-        run: echo "qilv.gissehel.com" > CNAME
+        run: echo "qilv.gissehel.com" > dist/CNAME
 
       - name: Deploy to GitHub Pages
         if: success()
@@ -34,6 +37,5 @@ jobs:
         with:
           target_branch: gh-pages
           build_dir: dist
-          fqdn: CNAME
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}

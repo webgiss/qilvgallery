@@ -20,6 +20,7 @@ export default class GalleryOverlays {
         this._galleryOverlaysUi = galleryOverlaysUi
         this._vk = vk;
         this._config = config;
+        this._preloadGaugeInfo = null;
 
         /**
          * @type {Object.<string, string>}
@@ -622,7 +623,11 @@ export default class GalleryOverlays {
      * @returns {void}
      */
     showPreloadGauge() {
-        this._galleryOverlaysUi.showPreloadGauge({ parent: this._mainElement });
+        this._preloadGaugeInfo = this._galleryOverlaysUi.showPreloadGauge({ 
+            parent: this._mainElement,
+            onComplete: () => this.hidePreloadGauge(),
+            preloadGaugeInfo : this._preloadGaugeInfo
+        });
         this.updatePreloadGauge();
     }
 
@@ -630,14 +635,19 @@ export default class GalleryOverlays {
      * @returns {void}
      */
     hidePreloadGauge() {
-        this._galleryOverlaysUi.hidePreloadGauge();
+        this._galleryOverlaysUi.hidePreloadGauge( { preloadGaugeInfo : this._preloadGaugeInfo } );
+        this._preloadGaugeInfo = null;
     }
 
     /**
      * @returns {void}
      */
     updatePreloadGauge() {
-        this._galleryOverlaysUi.updatePreloadGauge({ loaded: this._loaded, total: this._totalToLoad });
+        this._galleryOverlaysUi.updatePreloadGauge({
+            loaded: this._loaded,
+            total: this._totalToLoad,
+            preloadGaugeInfo : this._preloadGaugeInfo
+        });
     }
 
     /**
@@ -655,9 +665,7 @@ export default class GalleryOverlays {
         };
         this._galleryOverlaysUi.ensurePreloadAll({ hrefs, onImageLoaded, parent });
 
-        if (! this._galleryOverlaysUi.hasPreloadGauge) {
-            // this.hidePreloadGauge();
-            // } else {
+        if (! this._preloadGaugeInfo) {
             this.showPreloadGauge();
         }
     }

@@ -11,7 +11,6 @@ export default class GalleryOverlaysUi {
      */
     constructor({ domAccess }) {
         this._domAccess = domAccess;
-        this._blackScreen = null;
         this._preloadGauge = null;
         this._preloadGaugeInner = null;
     }
@@ -22,7 +21,7 @@ export default class GalleryOverlaysUi {
      * @returns {HTMLElement}
      */
     createBlackScreen({parent}) {
-        return this._domAccess.createElement('div', { id: 'qilvgallery_black_screen' }, { parent });
+        return this._domAccess.createElement('div', { parent, id: 'qilvgallery_black_screen' });
     }
 
     /**
@@ -36,42 +35,42 @@ export default class GalleryOverlaysUi {
     /**
      * @param {Object} params 
      * @param {string} params.id
-     * @param {HTMLElement} params.appendTo
-     * @param {string} params.content
+     * @param {HTMLElement} params.parent
+     * @param {HTMLElement[]} params.content
      * @param {string} params.position
      * @param {boolean} params.center
      * @returns {HTMLElement}
      */
     createInfoTip(params) {
         const domAccess = this._domAccess;
-        if (params == null) {
+        if (params === undefined) {
             params = {};
         }
-        const props = {
+        const features = {
             className: 'qilvgallery_infotip',
         };
-        const features = {};
 
-        if (params.id != null) {
-            props.id = params.id;
+        if (features.id !== undefined) {
+            features.id = params.id;
         }
-        if (params.appendTo) {
-            features.parent = params.appendTo;
+        if (params.parent) {
+            features.parent = params.parent;
         }
         if (params.content) {
-            features.html = params.content;
+            features.content = params.content;
         }
-        const infoTip = domAccess.createElement('div', props, features);
         if (params.classNames) {
-            params.classNames.forEach((name) => infoTip.classList.add(name));
+            features.classNames = params.classNames;
         }
+
+        const infoTip = domAccess.createElement('div', features);
         if (params.position) {
             domAccess.setCssProperty(infoTip, "position", params.position);
         }
-        if ((params.center != null) && params.center) {
+        if ((params.center !== undefined) && params.center) {
             infoTip.classList.add('qilvgallery_infotip_center')
         }
-        if (params.fadeOut != null) {
+        if (params.fadeOut !== undefined) {
             setTimeout(() => domAccess.remove(infoTip), params.fadeOut);
         }
 
@@ -86,10 +85,10 @@ export default class GalleryOverlaysUi {
      */
     createTempMessage(message, element) {
         this.createInfoTip({
-            content: message,
             fadeOut: 1500,
-            appendTo: element,
-            position: "fixed"
+            parent: element,
+            position: "fixed",
+            content: [ message ],
         });
     }
 
@@ -112,101 +111,96 @@ export default class GalleryOverlaysUi {
      */
     createInfoBox({parent, hrefs, isCurrent}) {
         const domAccess = this._domAccess;
-        const infoTip = this.createInfoTip({
-            appendTo: parent,
-        });
-        let info_tip_pre = domAccess.createElement('pre', null, {
-            parent: infoTip
-        });
-        hrefs.forEach((href) => {
-            let subElement = 'span';
-            if (isCurrent(href)) {
-                subElement = 'b';
-            }
-            domAccess.createElement(subElement, null, {
-                parent: info_tip_pre,
-                text: href
-            });
-            domAccess.createElement('br', null, {
-                parent: info_tip_pre
-            });
-        })
-        info_tip_pre.addEventListener('click', () => {
-            let text = '';
-            let maxLength = 0;
-            let count = 0;
-            hrefs.forEach((href) => {
-                text += href;
-                text += '\n';
-                count += 1;
-                if (href.length > maxLength) {
-                    maxLength = href.length;
-                }
-            });
-            domAccess.remove(info_tip_pre);
-
-            info_tip_pre = null;
-
-            let info_tip_area = domAccess.createElement('textarea', {
-                id: '',
-                rows: `${count + 1}`,
-                cols: `${maxLength + 2}`,
-                className: 'qilvgallery_infobox_textarea',
-                readonly: 1,
-                value: text,
-            }, {
-                parent: infoTip,
-            });
-            info_tip_area.select();
+        const infoTip = this.createInfoTip({ parent });
+        let info_tip_pre = domAccess.createElement('pre', { 
+            parent: infoTip,
+            content: [
+                hrefs.map((href) => {
+                    let subElement = 'span';
+                    if (isCurrent(href)) {
+                        subElement = 'b';
+                    }
+                    return [
+                        domAccess.createElement(subElement, { text: href }),
+                        domAccess.createElement('br'),
+                    ];
+                }),
+            ],
+            onClick: () => {
+                let text = '';
+                let maxLength = 0;
+                let count = 0;
+                hrefs.forEach((href) => {
+                    text += href;
+                    text += '\n';
+                    count += 1;
+                    if (href.length > maxLength) {
+                        maxLength = href.length;
+                    }
+                });
+                domAccess.remove(info_tip_pre);
+    
+                let info_tip_area = domAccess.createElement('textarea', {
+                    parent: infoTip,
+                    attr: {
+                        rows: `${count + 1}`,
+                        cols: `${maxLength + 2}`,
+                        className: 'qilvgallery_infobox_textarea',
+                        readonly: 1,
+                        value: text,
+                    },
+                });
+                info_tip_area.select();
+            },
         });
         return infoTip;
     }
 
     /**
-     * @param {HTMLElement} parent
-     * @returns {void}
+     * @param {Object} obj
+     * @param {HTMLElement} obj.parent
+     * @param {()=>{}} obj.onComplete
+     * @param {Object} obj.preloadGaugeInfo
+     * @returns {Object}
      */
-    showPreloadGauge({parent}) {
-        if (!this._preloadGauge) {
-            this._preloadGauge = this._domAccess.createElement('div', { className: 'qilvgallery_preload_gauge' }, { parent });
-            this._preloadGaugeInner = this._domAccess.createElement('div', { className: 'qilvgallery_preload_gauge_inner' }, { parent: this._preloadGauge });
+    showPreloadGauge({ parent, onComplete, preloadGaugeInfo }) {
+        if (!preloadGaugeInfo) {
+            const preloadGauge = this._domAccess.createElement('div', { parent, className: 'qilvgallery_preload_gauge' });
+            const preloadGaugeInner = this._domAccess.createElement('div', { parent: preloadGauge, className: 'qilvgallery_preload_gauge_inner' });
+            preloadGaugeInfo = { preloadGauge, preloadGaugeInner, onComplete };
         }
+        return preloadGaugeInfo;
     }
 
     /**
+     * @param {Object} obj
+     * @param {Object} obj.preloadGaugeInfo
      * @returns {void}
      */
-    hidePreloadGauge() {
-        if (this._preloadGauge) {
-            this._domAccess.remove(this._preloadGaugeInner);
-            this._domAccess.remove(this._preloadGauge);
-            this._preloadGauge = null;
-            this._preloadGaugeInner = null;
+    hidePreloadGauge({ preloadGaugeInfo }) {
+        if (preloadGaugeInfo) {
+            this._domAccess.remove(preloadGaugeInfo.preloadGaugeInner);
+            this._domAccess.remove(preloadGaugeInfo.preloadGauge);
         }
-    }
-
-    /**
-     * @returns {boolean}
-     */
-    get hasPreloadGauge() {
-        return this._preloadGauge !== null;
     }
 
     /**
      * @param {Object} obj
      * @param {Number} obj.loaded
      * @param {Number} obj.total
+     * @param {Object} obj.preloadGaugeInfo
      * @returns {void}
      */
-    updatePreloadGauge({ loaded, total }) {
-        if (this._preloadGauge) {
+    updatePreloadGauge({ loaded, total, preloadGaugeInfo }) {
+        if (preloadGaugeInfo) {
             const domAccess = this._domAccess;
             const percent = `${Math.floor(loaded * 100 / total)}%`;
-            domAccess.setCssProperty(this._preloadGaugeInner, 'width', percent);
-            domAccess.setTextContent(this._preloadGaugeInner, percent);
-            domAccess.setTextContent(this._preloadGaugeInner, `${loaded} / ${total}`);
+            domAccess.setCssProperty(preloadGaugeInfo.preloadGaugeInner, 'width', percent);
+            domAccess.setTextContent(preloadGaugeInfo.preloadGaugeInner, percent);
+            domAccess.setTextContent(preloadGaugeInfo.preloadGaugeInner, `${loaded} / ${total}`);
             if (loaded === total) {
-                this.hidePreloadGauge();
+                // this.hidePreloadGauge();
+                preloadGaugeInfo.onComplete();
             }
         }
     }
@@ -223,9 +217,9 @@ export default class GalleryOverlaysUi {
         if (!this._preloadAllPanel) {
             const domAccess = this._domAccess;
 
-            this._preloadAllPanel = domAccess.createElement('div', { id: 'qilvgallery_preload_all_panel' }, { parent });
+            this._preloadAllPanel = domAccess.createElement('div', { parent, id: 'qilvgallery_preload_all_panel' });
             hrefs.forEach((href) => {
-                const image = domAccess.createElement('img', { 'src': '#' }, { parent: this._preloadAllPanel });
+                const image = domAccess.createElement('img', { parent: this._preloadAllPanel, attr: { 'src': '#' } });
                 image.addEventListener('load', onImageLoaded );
                 image.src = href;
             });
@@ -252,32 +246,38 @@ export default class GalleryOverlaysUi {
      */
     createAboutInfoBox({parent, onClick}) {
         const domAccess = this._domAccess;
-        const aboutInfoBox = domAccess.createElement('div', { className: 'qilvgallery_about_infobox' }, { parent: parent });
-        const aboutInfoTipBlackScreen = domAccess.createElement('div', { className: 'qilvgallery_infotip_about_blackscreen' }, { parent: aboutInfoBox });
-        const aboutInfoTip = this.createInfoTip({
-            id: 'QILVGallery_About',
-            center: true,
-            appendTo: aboutInfoBox,
-            classNames: ['qilvgallery_infotip_about'],
+        const url = 'https://github.com/gissehel/qilvgallery';
+        return domAccess.createElement('div', { 
+            parent, 
+            className: 'qilvgallery_about_infobox',
+            content: [
+                domAccess.createElement('div', { className: 'qilvgallery_infotip_about_blackscreen', onClick }),
+                this.createInfoTip({
+                    id: 'QILVGallery_About',
+                    center: true,
+                    classNames: ['qilvgallery_infotip_about'],
+                    content: [
+                        domAccess.createElement('p', {
+                            text: 'QILV Gallery',
+                            className: 'qilvgallery_infotip_about_title',
+                        }),
+                        domAccess.createElement('a', {
+                            text: url,
+                            attr: {
+                                href: url,
+                                target: '_blank'
+                            },
+                        }),
+                        domAccess.createElement('br'),
+                        domAccess.createElement('div', { 
+                            text: 'Close',
+                            className: 'qilvgallery_infotip_about_button', 
+                            onClick
+                        })
+                    ],
+                })
+            ],
         });
-        domAccess.createElement('p', null, {
-            text: 'QILV Gallery',
-            className: 'qilvgallery_infotip_about_title',
-            parent: aboutInfoTip
-        });
-        domAccess.createElement('a', {
-            href: 'https://github.com/gissehel/qilvgallery',
-            target: '_blank'
-        }, {
-            text: 'https://github.com/gissehel/qilvgallery',
-            parent: aboutInfoTip
-        });
-        domAccess.createElement('br', null, { parent: aboutInfoTip });
-        const closeButton = domAccess.createElement('div', { className: 'qilvgallery_infotip_about_button' }, { text: 'Close', parent: aboutInfoTip });
-        closeButton.addEventListener('click', onClick);
-        aboutInfoTipBlackScreen.addEventListener('click', onClick);
-
-        return aboutInfoBox;
     }
 
     /**
@@ -300,40 +300,36 @@ export default class GalleryOverlaysUi {
         const domAccess = this._domAccess;
 
         const helpInfoTip = this.createInfoTip({
-            appendTo: parent,
+            parent,
             classNames: ['qilvgallery_infotip_help']
         });
 
         domAccess.createElement('h1', {
-            className: 'qilvgallery_infotip_help_title',
-        }, {
             text: 'Keyboard configuration',
             parent: helpInfoTip,
+            className: 'qilvgallery_infotip_help_title',
         });
 
-        let infoTipDiv = domAccess.createElement('div', {
-            className: 'qilvgallery_infotip_help_content',
-        }, {
-            parent: helpInfoTip,
+        let infoTipDiv = domAccess.createElement('div', { parent: helpInfoTip, className: 'qilvgallery_infotip_help_content' });
+
+        bindings.forEach(({keyName, methodName}) => {
+            const div = domAccess.createElement('div', { parent: infoTipDiv });
+            domAccess.createElement('b', { parent: div, text: keyName });
+            domAccess.createElement('span', { parent: div, text: `: ${methodName}` });
         });
 
-        bindings.forEach(({keyName, methodName})=>{
-            const div = domAccess.createElement('div', null, { parent: infoTipDiv });
-            domAccess.createElement('b', null, { parent: div, text: keyName });
-            domAccess.createElement('span', null, { parent: div, text: `: ${methodName}` });
-        });
-
-        domAccess.createElement('h1', { className: 'qilvgallery_infotip_help_title' }, {
+        domAccess.createElement('h1', {
             text: 'Values',
             parent: helpInfoTip,
+            className: 'qilvgallery_infotip_help_title',
         });
 
-        infoTipDiv = domAccess.createElement('div', { className: 'qilvgallery_infotip_help_content' }, { parent: helpInfoTip });
+        infoTipDiv = domAccess.createElement('div', { parent: helpInfoTip, className: 'qilvgallery_infotip_help_content' });
 
         configurations.forEach(({comment, config, effective})=>{
-            const div = domAccess.createElement('div', null, { parent: infoTipDiv });
-            domAccess.createElement('b', null, { parent: div, text: comment });
-            domAccess.createElement('span', null, { parent: div, text: `: ${config} (${effective})` });
+            const div = domAccess.createElement('div', { parent: infoTipDiv });
+            domAccess.createElement('b', { parent: div, text: comment });
+            domAccess.createElement('span', { parent: div, text: `: ${config} (${effective})` });
         })
 
         return helpInfoTip;
@@ -344,7 +340,7 @@ export default class GalleryOverlaysUi {
      * @returns {HTMLElement}
      */
     createMainElement() {
-        return this._domAccess.createElement('div', { id: 'qilvgallery_main_element' }, { parent: document.body });
+        return this._domAccess.createElement('div', { parent: document.body, id: 'qilvgallery_main_element' });
     }
 
     /**
@@ -353,7 +349,7 @@ export default class GalleryOverlaysUi {
      * @returns {HTMLElement}
      */
     createViewer({ parent }) {
-        return this._domAccess.createElement('div', { id: 'qilvgallery_viewer' }, { parent });
+        return this._domAccess.createElement('div', { parent, id: 'qilvgallery_viewer' });
     }
 
     /**
@@ -462,9 +458,7 @@ export default class GalleryOverlaysUi {
      * @returns {void}
      */
     installCss() {
-        const style = document.createElement('style');
-        style.type = 'text/css';
-        style.innerHTML = `
+        this._domAccess.installCss(`
 
             #qilvgallery_viewer {
                 position: absolute !important;
@@ -701,8 +695,6 @@ export default class GalleryOverlaysUi {
                 margin: 0;
                 padding: 0;
             }
-        `;
-        document.getElementsByTagName('head')[0].appendChild(style);
+        `);
     }
-
 }

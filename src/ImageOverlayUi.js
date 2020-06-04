@@ -17,8 +17,8 @@ export default class ImageOverlayUi {
          */
         this._image = null;
 
-        this._div = domAccess.createElement('div', { className: 'qilvgallery_image_outter' }, { parent });
-        this._a = domAccess.createElement('a', null, { parent: this._div });
+        this._div = domAccess.createElement('div', { parent, className: 'qilvgallery_image_outter' });
+        this._a = domAccess.createElement('a', { parent: this._div });
     }
 
     /**
@@ -50,9 +50,10 @@ export default class ImageOverlayUi {
             this._image.remove();
         }
 
-        this._image = this._domAccess.createElement('img', { src: '#' }, {
+        this._image = this._domAccess.createElement('img', {
             classNames: [ 'qilvgallery_image' ],
             parent: this._a,
+            attr: { src: '#' },
         });
 
         this._image.addEventListener('load', (e) => this.setIsLoaded());

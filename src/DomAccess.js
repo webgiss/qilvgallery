@@ -1,5 +1,5 @@
 /**
- * @class
+ * @class Access to the DOM
  */
 export default class DomAccess {
     /**
@@ -27,6 +27,17 @@ export default class DomAccess {
     }
 
     /**
+     * Install a css content
+     * @param {string} cssText 
+     */
+    installCss(cssText) {
+        const style = document.createElement('style');
+        style.type = 'text/css';
+        style.innerHTML = cssText;
+        document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    /**
      * @param {HTMLElement} element
      * @param {string} content
      */
@@ -45,34 +56,44 @@ export default class DomAccess {
     /**
      * 
      * @param {string} name 
-     * @param {Object} props 
      * @param {Object} features 
      * @param {HTMLElement} features.parent
+     * @param {string} features.id
      * @param {string} features.html
      * @param {string} features.text
      * @param {Object<string, string>} features.style
+     * @param {string} features.className
      * @param {string[]} features.classNames
+     * @param {HTMLElement[]} features.content
+     * @param {(e: MouseEvent)=>{}} features.onClick
      */
-    createElement(name, props, features) {
+    createElement(name, features) {
         const element = document.createElement(name);
-
-        if (props) {
-            Object.keys(props).forEach((key) => {
-                element[key] = props[key];
-            });
-        }
 
         if (features) {
             Object.keys(features).forEach((feature) => {
                 switch (feature) {
+                    case 'attr': {
+                        const props = features.attr;
+                        Object.keys(props).forEach((key) => {
+                            element[key] = props[key];
+                        });
+                    }
+                    break;
                     case 'style': {
-                        const style = features.style;
-                        this.setCssProperties(element, style);
+                        this.setCssProperties(element, features.style);
+                    }
+                    break;
+                    case 'id': {
+                        element.id = features.id;
+                    }
+                    break;
+                    case 'className': {
+                        element.classList.add(features.className);
                     }
                     break;
                     case 'classNames': {
-                        const classNames = features.classNames;
-                        element.classList.add(...classNames);
+                        element.classList.add(...features.classNames);
                     }
                     break;
                     case 'parent': {
@@ -88,6 +109,25 @@ export default class DomAccess {
                     break;
                     case 'text': {
                         this.setTextContent(element, features.text);
+                    }
+                    break;
+                    case 'onClick': {
+                        element.addEventListener('click', features.onClick);
+                    }
+                    break;
+                    case 'content': {
+                        const addContent = (content) => {
+                            content.forEach((subElement) => {
+                                if (subElement instanceof HTMLElement)  {
+                                    element.appendChild(subElement);
+                                } else if (typeof(subElement) === typeof('')) {
+                                    element.appendChild(document.createTextNode(subElement));
+                                } else if (typeof(subElement) === typeof([])) {
+                                    addContent(subElement);
+                                }
+                            });
+                        };
+                        addContent(features.content);
                     }
                     break;
                 }

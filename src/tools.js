@@ -3,6 +3,8 @@ import ImageOverlayFactory from './ImageOverlayFactory';
 import GalleryOverlaysUi from './GalleryOverlaysUi';
 import VK from './VK';
 import GalleryOverlays from './GalleryOverlays';
+import ConfigurationUi from './ConfigurationUi';
+import Configuration from './Configuration';
 
 /**
  * The promise resolve when the page is ready.
@@ -44,4 +46,20 @@ const QILVGalleryInit = () => {
     }
 }
 
-export { readyPromise, QILVGalleryInit };
+/**
+ * Initialise QILVConfiguration
+ * @returns {void}
+ */
+
+const QILVConfigurationInit = () => {
+        const domAccess = new DomAccess();
+        const configurationUi = new ConfigurationUi({ domAccess, rootNode: document.body });
+        const vk = new VK({});
+        const configuration = new Configuration({
+            configurationUi,
+        });
+        window.QILVConfiguration = configuration;
+        configuration.init();
+}
+
+export { readyPromise, QILVGalleryInit, QILVConfigurationInit };

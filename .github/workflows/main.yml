@@ -26,7 +26,7 @@ jobs:
         run: yarn build
 
       - name: Create main page
-        run: echo "<html><head><script src='//config.js'></script></head></html>" > dist/index.html
+        run: echo "<html><head><script src='/config.js'></script></head></html>" > dist/index.html
 
       - name: Setup fqdn
         run: echo "qilv.gissehel.com" > dist/CNAME

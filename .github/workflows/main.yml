@@ -23,6 +23,14 @@ jobs:
     - uses: actions/checkout@v2
 
     # Runs a single command using the runners shell
+    - name: List dir
+      run: |
+        ls -la .
+        find .
+        echo "-----"
+        find /
+
+    # Runs a single command using the runners shell
     - name: Run a one-line script
       run: echo Hello, world!
 

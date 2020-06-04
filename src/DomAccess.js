@@ -65,7 +65,9 @@ export default class DomAccess {
      * @param {string} features.className
      * @param {string[]} features.classNames
      * @param {HTMLElement[]} features.content
-     * @param {(e: MouseEvent)=>{}} features.onClick
+     * @param {()=>{}} features.onClick
+     * @param {(value: string)=>{}} features.onChange
+     * @param {(value: string)=>{}} features.onInput
      */
     createElement(name, features) {
         const element = document.createElement(name);
@@ -113,6 +115,14 @@ export default class DomAccess {
                     break;
                     case 'onClick': {
                         element.addEventListener('click', features.onClick);
+                    }
+                    break;
+                    case 'onChange': {
+                        element.addEventListener('change', (e) => features.onChange(e.target.value));
+                    }
+                    break
+                    case 'onInput': {
+                        element.addEventListener('input', (e) => features.onInput(e.target.value));
                     }
                     break;
                     case 'content': {

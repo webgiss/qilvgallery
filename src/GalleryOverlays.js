@@ -23,16 +23,16 @@ export default class GalleryOverlays {
         this._preloadGaugeInfo = null;
 
         /**
-         * @type {Object.<string, string>}
+         * @type {Object.<string, {label: string, default: string}>}
          */
         this._configurables = {
-            "slideshowSpeed": "Initial slideshow speed (ms)",
-            "transitionTime": "Initial transition's effect's time (ms)",
-            "slideshowMode": "Slideshow on at start ?",
-            "preloadAllMode": "Preload all at start ?",
-            "maxSize": "Fit the image to the screen if bigger than the screen at start ?",
-            "relative": "Show image at the top of the screen instead of the top of the page at start ?",
-            "blackScreenMode": "Show on 'black screen' mode at start ?",
+            "slideshowSpeed": { label: "Initial slideshow speed (ms)", default: '500' },
+            "transitionTime": { label: "Initial transition's effect's time (ms)", default: '0' },
+            "slideshowMode": { label: "Slideshow on at start ?", default: 'false' },
+            "preloadAllMode": { label: "Preload all at start ?", default: 'true' },
+            "maxSize": { label: "Fit the image to the screen if bigger than the screen at start ?", default: 'true' },
+            "relative": { label: "Show image at the top of the screen instead of the top of the page at start ?", default: 'true' },
+            "blackScreenMode": { label: "Show on 'black screen' mode at start ?", default: 'true' },
         };
 
         /**
@@ -103,19 +103,37 @@ export default class GalleryOverlays {
         /**
          * @type boolean
          */
-        this._slideshowMode = false;
+        this._slideshowMode = null;
         /**
          * @type boolean
          */
-        this._preloadAllMode = true;
+        this._preloadAllMode = null;
+        /**
+         * @type number
+         */
+        this._slideshowSpeed = null;
+        /**
+         * @type number
+         */
+        this._transitionTime = null;
+        /**
+         * @type boolean
+         */
+        this._maxSize = null;
+        /**
+         * @type boolean
+         */
+        this._relative = true;
+        /**
+         * @type boolean
+         */
+        this._blackScreenMode = null;
+
+
         /**
          * @type boolean
          */
         this._slideshowDirNext = true;
-        /**
-         * @type number
-         */
-        this._slideshowSpeed = 500;
         /**
          * @type boolean
          */
@@ -127,23 +145,7 @@ export default class GalleryOverlays {
         /**
          * @type boolean
          */
-        this._maxSize = true;
-        /**
-         * @type boolean
-         */
-        this._relative = true;
-        /**
-         * @type boolean
-         */
         this._centered = false;
-        /**
-         * @type boolean
-         */
-        this._blackScreenMode = true;
-        /**
-         * @type number
-         */
-        this._transitionTime = 0;
         /**
          * @type HTMLElement
          */
@@ -168,13 +170,17 @@ export default class GalleryOverlays {
         return this._key_bindings;
     }
 
+    getConfigurables() {
+        return this._configurables;
+    }
+
     /**
      * @returns {number}
      */
     get autoX() {
         return this._autoX;
     }
-    
+
     /**
      * @param {number} value
      * @returns {void}
@@ -190,7 +196,7 @@ export default class GalleryOverlays {
     get autoY() {
         return this._autoY;
     }
-    
+
     /**
      * @param {number} value
      * @returns {void}
@@ -269,7 +275,7 @@ export default class GalleryOverlays {
      */
     set centered(value) {
         this._centered = value;
-        this._galleryOverlaysUi.setCentered({ element : this._viewer, centered: this._centered });
+        this._galleryOverlaysUi.setCentered({ element: this._viewer, centered: this._centered });
     }
 
     /**
@@ -398,7 +404,7 @@ export default class GalleryOverlays {
      */
     setSlideshowSpeed(value, silent) {
         this._slideshowSpeed = value;
-        if (! silent) {
+        if (!silent) {
             this.createTempMessage(`Speed : ${this._slideshowSpeed} ms`);
         }
     }
@@ -593,9 +599,6 @@ export default class GalleryOverlays {
     set relative(value) {
         this._relative = value;
         this._galleryOverlaysUi.setRelative({ element: this._viewer, relative: this._relative });
-        // this._current.relative = this._relative;
-        // this._next.relative = this._relative;
-        // this._prev.relative = this._relative;
     }
 
     /**
@@ -623,10 +626,10 @@ export default class GalleryOverlays {
      * @returns {void}
      */
     showPreloadGauge() {
-        this._preloadGaugeInfo = this._galleryOverlaysUi.showPreloadGauge({ 
+        this._preloadGaugeInfo = this._galleryOverlaysUi.showPreloadGauge({
             parent: this._mainElement,
             onComplete: () => this.hidePreloadGauge(),
-            preloadGaugeInfo : this._preloadGaugeInfo
+            preloadGaugeInfo: this._preloadGaugeInfo
         });
         this.updatePreloadGauge();
     }
@@ -635,7 +638,7 @@ export default class GalleryOverlays {
      * @returns {void}
      */
     hidePreloadGauge() {
-        this._galleryOverlaysUi.hidePreloadGauge( { preloadGaugeInfo : this._preloadGaugeInfo } );
+        this._galleryOverlaysUi.hidePreloadGauge({ preloadGaugeInfo: this._preloadGaugeInfo });
         this._preloadGaugeInfo = null;
     }
 
@@ -646,7 +649,7 @@ export default class GalleryOverlays {
         this._galleryOverlaysUi.updatePreloadGauge({
             loaded: this._loaded,
             total: this._totalToLoad,
-            preloadGaugeInfo : this._preloadGaugeInfo
+            preloadGaugeInfo: this._preloadGaugeInfo
         });
     }
 
@@ -656,7 +659,7 @@ export default class GalleryOverlays {
      * @returns {void}
      */
     preloadAll({ parent }) {
-        const hrefs = Object.values(this._links).map((link)=>link.href);
+        const hrefs = Object.values(this._links).map((link) => link.href);
         this._loaded = 0;
         this._totalToLoad = hrefs.length;
         const onImageLoaded = () => {
@@ -665,7 +668,7 @@ export default class GalleryOverlays {
         };
         this._galleryOverlaysUi.ensurePreloadAll({ hrefs, onImageLoaded, parent });
 
-        if (! this._preloadGaugeInfo) {
+        if (!this._preloadGaugeInfo) {
             this.showPreloadGauge();
         }
     }
@@ -714,17 +717,18 @@ export default class GalleryOverlays {
                 if (value && value.target === this) {
                     const { methodName } = value;
                     bindings.push({
-                        keyName: this._vk.getName(key), 
-                        methodName:methodName in bindableMethods ? bindableMethods[methodName] : methodName 
+                        keyName: this._vk.getName(key),
+                        methodName: methodName in bindableMethods ? bindableMethods[methodName] : methodName
                     });
                 }
             })
             Object.keys(this._configurables).forEach((attr) => {
-                const comment = this._configurables[attr];
-                const config = this._config['QILV.' + attr] || "default";
+                const comment = this._configurables[attr].label;
+                const defaultValue = this._configurables[attr].default;
+                const config = this._config['QILV.' + attr] || `default = [${defaultValue}]`;
                 const effective = this[attr];
 
-                configurations.push({comment, config, effective});
+                configurations.push({ comment, config, effective });
             });
 
             this._helpInfoTip = this._galleryOverlaysUi.createHelpInfoTip({
@@ -756,7 +760,7 @@ export default class GalleryOverlays {
         this._prev = this._imageOverlayFactory.createImageOverylay(this._viewer);
         this._current = this._imageOverlayFactory.createImageOverylay(this._viewer);
         this._next = this._imageOverlayFactory.createImageOverylay(this._viewer);
-        
+
         let previousHref = null;
 
         const linkList = this._galleryOverlaysUi.getLinkRefs().filter((linkRef) => {
@@ -805,8 +809,8 @@ export default class GalleryOverlays {
         this._vk.auto_bind(this);
 
         Object.keys(this._configurables).forEach((keyName) => {
-            let comment = this._configurables[keyName];
-            let value = this._config["QILV." + keyName];
+            // let comment = this._configurables[keyName].label;
+            let value = this._config["QILV." + keyName] || this._configurables[keyName].default;
             if (value != null) {
                 if (value.match(/^\-?[0-9]+$/)) {
                     value = parseInt(value);

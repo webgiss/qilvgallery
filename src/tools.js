@@ -55,8 +55,16 @@ const QILVConfigurationInit = () => {
         const domAccess = new DomAccess();
         const configurationUi = new ConfigurationUi({ domAccess, rootNode: document.body });
         const vk = new VK({});
+        const galleryOverlays = new GalleryOverlays({
+            imageOverlayFactory : null,
+            galleryOverlaysUi : null,
+            vk,
+            config : {},
+        });
         const configuration = new Configuration({
             configurationUi,
+            vk,
+            galleryOverlays
         });
         window.QILVConfiguration = configuration;
         configuration.init();

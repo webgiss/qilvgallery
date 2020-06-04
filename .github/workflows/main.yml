@@ -32,13 +32,26 @@ jobs:
           echo "-----"
           ls -la .
           echo "-----"
-          find .
-          echo "-----"
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+
+      # Runs a single command using the runners shell
+      - name: Use yarn
+        run: yarn
+
+      # Runs a single command using the runners shell
+      - name: Build with yarn
+        run: yarn build
+
+      # Runs a single command using the runners shell
+      - name: List dir
+        run: |
+          echo "-----"
+          ls -la .
+          echo "-----"
 
       # Runs a single command using the runners shell
       - name: Run a one-line script

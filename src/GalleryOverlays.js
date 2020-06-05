@@ -504,9 +504,6 @@ export default class GalleryOverlays {
     setMaxSize(value, silent) {
         this._maxSize = value;
         this._galleryOverlaysUi.setMaxSize({ element: this._viewer, maxSize: this._maxSize });
-        if (!silent) {
-            this.createTempMessage(`Speed : ${this._slideshowSpeed} ms`);
-        }
     }
 
     /**

@@ -494,7 +494,7 @@ export default class GalleryOverlays {
      * @param {boolean} value
      */
     set maxSize(value) {
-        setMaxSize(value, false);
+        this.setMaxSize(value, false);
     }
 
     /**
@@ -504,9 +504,6 @@ export default class GalleryOverlays {
     setMaxSize(value, silent) {
         this._maxSize = value;
         this._galleryOverlaysUi.setMaxSize({ element: this._viewer, maxSize: this._maxSize });
-        // this._current.setMaxSize(this._maxSize);
-        // this._prev.setMaxSize(this._maxSize);
-        // this._next.setMaxSize(this._maxSize);
         if (!silent) {
             this.createTempMessage(`Speed : ${this._slideshowSpeed} ms`);
         }

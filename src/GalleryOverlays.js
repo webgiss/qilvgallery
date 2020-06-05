@@ -141,7 +141,7 @@ export default class GalleryOverlays {
         /**
          * @type boolean
          */
-        this._autoY = true;
+        this._autoY = false;
         /**
          * @type boolean
          */

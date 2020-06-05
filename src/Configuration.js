@@ -2,10 +2,6 @@ import ConfigurationUi from './ConfigurationUi';
 import VK from './VK';
 import GalleryOverlays from './GalleryOverlays';
 
-/**
- * @class
- * @implements {IBindable}
- */
 export default class Configuration {
     /**
      * @param {Object} obj

@@ -1,10 +1,5 @@
 import DomAccess from './DomAccess';
-import IBindable from './IBindable';
 
-/**
- * @class
- * @implements {IBindable}
- */
 export default class ConfigurationUi {
     /**
      * @param {Object} obj

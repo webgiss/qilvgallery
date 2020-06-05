@@ -1,9 +1,5 @@
 import DomAccess from './DomAccess';
 
-/**
- * @class
- * @implements {IBindable}
- */
 export default class GalleryOverlaysUi {
     /**
      * @param {Object} obj

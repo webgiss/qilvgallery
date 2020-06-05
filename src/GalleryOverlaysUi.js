@@ -650,13 +650,13 @@ export default class GalleryOverlaysUi {
                 margin: unset !important;
                 width: auto !important;
                 height: auto !important;
-                maxWidth: unset !important;
-                maxHeight: unset !important;
+                max-width: unset !important;
+                max-height: unset !important;
             }
 
             .maxSize .qilvgallery_image {
-                maxWidth: 100% !important;
-                maxHeight: 100% !important;
+                max-width: 100% !important;
+                max-height: 100% !important;
             }
 
             .autoX .qilvgallery_image {

@@ -2,6 +2,7 @@ import ImageOverlayFactory from './ImageOverlayFactory';
 import ImageOverlay from './ImageOverlay';
 import VK from './VK';
 import GalleryOverlaysUi from './GalleryOverlaysUi';
+import { version } from './version';
 
 /**
  * @class
@@ -678,7 +679,8 @@ export default class GalleryOverlays {
                 parent: this._mainElement,
                 onClick: () => {
                     this.removeAbout();
-                }
+                },
+                version,
             })
         }
     }
@@ -729,6 +731,7 @@ export default class GalleryOverlays {
                 parent: this._mainElement,
                 bindings,
                 configurations,
+                version,
             })
         }
     }

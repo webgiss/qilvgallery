@@ -243,9 +243,10 @@ export default class GalleryOverlaysUi {
      * @param {Object} obj 
      * @param {HTMLElement} obj.parent
      * @param {() => {}} obj.onClick
+     * @param {string} obj.version
      * @returns {HTMLElement}
      */
-    createAboutInfoBox({ parent, onClick }) {
+    createAboutInfoBox({ parent, onClick, version }) {
         const domAccess = this._domAccess;
         const url = 'https://github.com/gissehel/qilvgallery';
         return domAccess.createElement('div', {
@@ -264,6 +265,10 @@ export default class GalleryOverlaysUi {
                         domAccess.createElement('p', {
                             text: 'QILV Gallery',
                             className: 'qilvgallery_infotip_about_title',
+                        }),
+                        domAccess.createElement('p', {
+                            text: `Version : ${version}`,
+                            className: 'qilvgallery_infotip_about_version',
                         }),
                         domAccess.createElement('a', {
                             text: url,
@@ -298,15 +303,20 @@ export default class GalleryOverlaysUi {
      * @param {HTMLElement} obj.parent
      * @param {{keyName: string, methodName: string}[]} obj.bindings
      * @param {{comment: string, configured: string, effective: string, defaultValue: string}[]} obj.configurations
+     * @param {string} obj.version
      * @returns {HTMLElement}
      */
-    createHelpInfoTip({ parent, bindings, configurations }) {
+    createHelpInfoTip({ parent, bindings, configurations, version }) {
         const domAccess = this._domAccess;
 
         return this.createInfoTip({
             parent,
             classNames: ['qilvgallery_infotip_help'],
             content: [
+                domAccess.createElement('p', {
+                    text: `Version: ${version}`,
+                }),
+
                 domAccess.createElement('h1', {
                     text: 'Keyboard configuration',
                     className: 'qilvgallery_infotip_help_title',

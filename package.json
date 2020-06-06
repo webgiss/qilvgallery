@@ -7,7 +7,10 @@
   "author": "Gissehel",
   "license": "MIT",
   "scripts": {
-    "build": "rollup -c --no-esModule --no-strict"
+    "build": "rollup -c --no-esModule --no-strict",
+    "ver": "git checkout -- src/version.js; echo \"export const version='$(git rev-parse --short HEAD)$([ -z \"$(git status --porcelain)\" ] && echo -n \"\" || echo -n \"*\")';\" > src/version.js",
+    "dev": "git checkout -- src/version.js",
+    "buildver": "yarn ver && yarn build && yarn dev"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",

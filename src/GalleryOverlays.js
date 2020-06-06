@@ -718,11 +718,11 @@ export default class GalleryOverlays {
             })
             Object.keys(this._configurables).forEach((attr) => {
                 const comment = this._configurables[attr].label;
+                const configured = this._config['QILV.' + attr] || undefined;
                 const defaultValue = this._configurables[attr].default;
-                const config = this._config['QILV.' + attr] || `default = [${defaultValue}]`;
                 const effective = this[attr];
 
-                configurations.push({ comment, config, effective });
+                configurations.push({ comment, configured, effective, defaultValue });
             });
 
             this._helpInfoTip = this._galleryOverlaysUi.createHelpInfoTip({

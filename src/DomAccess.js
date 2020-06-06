@@ -68,6 +68,8 @@ export default class DomAccess {
      * @param {()=>{}} features.onClick
      * @param {(value: string)=>{}} features.onChange
      * @param {(value: string)=>{}} features.onInput
+     * @param {()=>{}} features.onLoad
+     * @param {(value: HTMLElement)=>{}} features.onInstance
      */
     createElement(name, features) {
         const element = document.createElement(name);
@@ -120,9 +122,13 @@ export default class DomAccess {
                     case 'onChange': {
                         element.addEventListener('change', (e) => features.onChange(e.target.value));
                     }
-                    break
+                    break;
                     case 'onInput': {
                         element.addEventListener('input', (e) => features.onInput(e.target.value));
+                    }
+                    break;
+                    case 'onLoad': {
+                        element.addEventListener('load', () => features.onLoad());
                     }
                     break;
                     case 'content': {
@@ -138,6 +144,11 @@ export default class DomAccess {
                             });
                         };
                         addContent(features.content);
+                    }
+                    break;
+                    case 'onInstance': {
+                        const onInstance = features.onInstance;
+                        onInstance(element);
                     }
                     break;
                 }

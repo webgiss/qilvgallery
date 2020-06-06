@@ -16,7 +16,7 @@ export default class GalleryOverlaysUi {
      * @param {HTMLElement} obj.parent
      * @returns {HTMLElement}
      */
-    createBlackScreen({parent}) {
+    createBlackScreen({ parent }) {
         return this._domAccess.createElement('div', { parent, id: 'qilvgallery_black_screen' });
     }
 
@@ -84,7 +84,7 @@ export default class GalleryOverlaysUi {
             fadeOut: 1500,
             parent: element,
             position: "fixed",
-            content: [ message ],
+            content: [message],
         });
     }
 
@@ -105,10 +105,10 @@ export default class GalleryOverlaysUi {
      * @param {(href: string) => boolean} obj.isCurrent
      * @return {HTMLElement}
      */
-    createInfoBox({parent, hrefs, isCurrent}) {
+    createInfoBox({ parent, hrefs, isCurrent }) {
         const domAccess = this._domAccess;
         const infoTip = this.createInfoTip({ parent });
-        let info_tip_pre = domAccess.createElement('pre', { 
+        let info_tip_pre = domAccess.createElement('pre', {
             parent: infoTip,
             content: [
                 hrefs.map((href) => {
@@ -135,7 +135,7 @@ export default class GalleryOverlaysUi {
                     }
                 });
                 domAccess.remove(info_tip_pre);
-    
+
                 let info_tip_area = domAccess.createElement('textarea', {
                     parent: infoTip,
                     attr: {
@@ -209,14 +209,19 @@ export default class GalleryOverlaysUi {
      * @param {() => {}} obj.onImageLoaded
      * @param {HTMLElement} obj.parent
      */
-    ensurePreloadAll({hrefs, onImageLoaded, parent}) {
+    ensurePreloadAll({ hrefs, onImageLoaded, parent }) {
         if (!this._preloadAllPanel) {
             const domAccess = this._domAccess;
 
             this._preloadAllPanel = domAccess.createElement('div', { parent, id: 'qilvgallery_preload_all_panel' });
             hrefs.forEach((href) => {
-                const image = domAccess.createElement('img', { parent: this._preloadAllPanel, attr: { 'src': '#' } });
-                image.addEventListener('load', onImageLoaded );
+                const image = domAccess.createElement('img', {
+                    parent: this._preloadAllPanel,
+                    onLoad: onImageLoaded,
+                    attr: {
+                        'src': '#'
+                    }
+                });
                 image.src = href;
             });
         }
@@ -240,14 +245,17 @@ export default class GalleryOverlaysUi {
      * @param {() => {}} obj.onClick
      * @returns {HTMLElement}
      */
-    createAboutInfoBox({parent, onClick}) {
+    createAboutInfoBox({ parent, onClick }) {
         const domAccess = this._domAccess;
         const url = 'https://github.com/gissehel/qilvgallery';
-        return domAccess.createElement('div', { 
-            parent, 
+        return domAccess.createElement('div', {
+            parent,
             className: 'qilvgallery_about_infobox',
             content: [
-                domAccess.createElement('div', { className: 'qilvgallery_infotip_about_blackscreen', onClick }),
+                domAccess.createElement('div', {
+                    className: 'qilvgallery_infotip_about_blackscreen',
+                    onClick
+                }),
                 this.createInfoTip({
                     id: 'QILVGallery_About',
                     center: true,
@@ -265,9 +273,9 @@ export default class GalleryOverlaysUi {
                             },
                         }),
                         domAccess.createElement('br'),
-                        domAccess.createElement('div', { 
+                        domAccess.createElement('div', {
                             text: 'Close',
-                            className: 'qilvgallery_infotip_about_button', 
+                            className: 'qilvgallery_infotip_about_button',
                             onClick
                         })
                     ],
@@ -289,46 +297,47 @@ export default class GalleryOverlaysUi {
      * @param {Object} obj
      * @param {HTMLElement} obj.parent
      * @param {{keyName: string, methodName: string}[]} obj.bindings
-     * @param {{comment: string, config: string, effective: string}[]} obj.configurations
+     * @param {{comment: string, configured: string, effective: string, defaultValue: string}[]} obj.configurations
      * @returns {HTMLElement}
      */
-    createHelpInfoTip({parent, bindings, configurations}) {
+    createHelpInfoTip({ parent, bindings, configurations }) {
         const domAccess = this._domAccess;
 
-        const helpInfoTip = this.createInfoTip({
+        return this.createInfoTip({
             parent,
-            classNames: ['qilvgallery_infotip_help']
+            classNames: ['qilvgallery_infotip_help'],
+            content: [
+                domAccess.createElement('h1', {
+                    text: 'Keyboard configuration',
+                    className: 'qilvgallery_infotip_help_title',
+                }),
+
+                domAccess.createElement('div', {
+                    className: 'qilvgallery_infotip_help_content',
+                    content: bindings.map(({ keyName, methodName }) => domAccess.createElement('div', {
+                        content: [
+                            domAccess.createElement('b', { text: keyName }),
+                            domAccess.createElement('span', { text: `: ${methodName}` }),
+                        ],
+                    })),
+                }),
+
+                domAccess.createElement('h1', {
+                    text: 'Values',
+                    className: 'qilvgallery_infotip_help_title',
+                }),
+
+                domAccess.createElement('div', {
+                    className: 'qilvgallery_infotip_help_content',
+                    content: configurations.map(({ comment, configured, effective, defaultValue }) => domAccess.createElement('div', {
+                        content: [
+                            domAccess.createElement('b', { text: comment }),
+                            domAccess.createElement('span', { text: `: ${effective} (configured = ${configured} ; default = ${defaultValue})` }),
+                        ],
+                    }))
+                }),
+            ],
         });
-
-        domAccess.createElement('h1', {
-            text: 'Keyboard configuration',
-            parent: helpInfoTip,
-            className: 'qilvgallery_infotip_help_title',
-        });
-
-        let infoTipDiv = domAccess.createElement('div', { parent: helpInfoTip, className: 'qilvgallery_infotip_help_content' });
-
-        bindings.forEach(({keyName, methodName}) => {
-            const div = domAccess.createElement('div', { parent: infoTipDiv });
-            domAccess.createElement('b', { parent: div, text: keyName });
-            domAccess.createElement('span', { parent: div, text: `: ${methodName}` });
-        });
-
-        domAccess.createElement('h1', {
-            text: 'Values',
-            parent: helpInfoTip,
-            className: 'qilvgallery_infotip_help_title',
-        });
-
-        infoTipDiv = domAccess.createElement('div', { parent: helpInfoTip, className: 'qilvgallery_infotip_help_content' });
-
-        configurations.forEach(({comment, config, effective})=>{
-            const div = domAccess.createElement('div', { parent: infoTipDiv });
-            domAccess.createElement('b', { parent: div, text: comment });
-            domAccess.createElement('span', { parent: div, text: `: ${config} (${effective})` });
-        })
-
-        return helpInfoTip;
     }
 
 
@@ -352,7 +361,7 @@ export default class GalleryOverlaysUi {
      * @returns {{href: string, element: HTMLElement}[]}
      */
     getLinkRefs() {
-        return this._domAccess.getElementsByTagName('a').map((this_a) => ({href: this_a.href, element: this_a}));
+        return this._domAccess.getElementsByTagName('a').map((this_a) => ({ href: this_a.href, element: this_a }));
     }
 
     /**

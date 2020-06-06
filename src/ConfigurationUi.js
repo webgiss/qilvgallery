@@ -176,19 +176,25 @@ export default class ConfigurationUi {
 
         const elements = [];
 
+        /**
+         * @type HTMLElement
+         */
+        let valuesTable = null;
+
         const valuePanel = this._domAccess.createElement('div', {
             parent: this._rootNode,
             classNames: ['valuePanel', 'configPanel'],
-        });
-
-        const valuesPanel = this._domAccess.createElement('div', {
-            parent: valuePanel,
-            className: 'valuesPanel',
-        });
-
-        const valuesTable = this._domAccess.createElement('table', {
-            parent: valuesPanel,
-            className: 'valuesTable',
+            content: [
+                this._domAccess.createElement('div', {
+                    className: 'valuesPanel',
+                    content: [
+                        this._domAccess.createElement('table', {
+                            className: 'valuesTable',
+                            onInstance: (instance) => valuesTable = instance,
+                        })
+                    ],
+                })
+            ],
         });
 
         const valuePanelInfo = {

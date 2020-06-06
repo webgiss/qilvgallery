@@ -23,7 +23,7 @@ jobs:
         run: yarn
 
       - name: Build with yarn
-        run: yarn build
+        run: yarn buildver
 
       - name: Create main page
         run: echo "<html><head><script src='/config.js'></script></head></html>" > dist/index.html

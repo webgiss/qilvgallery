@@ -8,8 +8,8 @@
   "license": "MIT",
   "scripts": {
     "build": "rollup -c --no-esModule --no-strict",
-    "ver": "git checkout -- src/version.js; echo \"export const version='$([ \"$(git name-rev --tags --name-only HEAD)\" == \"undefined\" ] && echo -n \"\" || echo -n \"$(git name-rev --tags --name-only HEAD) - \")$(git rev-parse --short HEAD)$([ -z \"$(git status --porcelain)\" ] && echo -n \"\" || echo -n \"*\")';\" > src/version.js",
-    "dev": "git checkout -- src/version.js",
+    "ver": "bash ./helper.sh ver",
+    "dev": "bash ./helper.sh dev",
     "buildver": "yarn ver && yarn build && yarn dev"
   },
   "devDependencies": {

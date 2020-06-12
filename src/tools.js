@@ -43,6 +43,8 @@ const QILVGalleryInit = () => {
         });
         window.QILVGalleryOverlays = galleryOverlays;
         galleryOverlays.init();
+    } else {
+        window.QILVGalleryOverlays.show();
     }
 }
 

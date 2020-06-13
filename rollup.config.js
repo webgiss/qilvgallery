@@ -1,12 +1,13 @@
 import resolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
-// import babelrc from 'babelrc-rollup';
 import { uglify } from "rollup-plugin-uglify";
 
-export default [{
-    input: 'src/bootConfig.js',
+const sources=['config', 'gallery'];
+
+export default sources.map((source) => ({
+    input: `src/boot-${source}.js`,
     output: {
-        file: 'dist/config.js',
+        file: `dist/${source}.js`,
         format: 'cjs'
     },
     plugins: [
@@ -14,15 +15,4 @@ export default [{
         babel(),
         uglify()
     ]
-},{
-    input: 'src/boot.js',
-    output: {
-        file: 'dist/gallery.js',
-        format: 'cjs'
-    },
-    plugins: [
-        resolve(),
-        babel(),
-        uglify()
-    ]
-}];
+}));

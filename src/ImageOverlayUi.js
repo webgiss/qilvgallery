@@ -40,14 +40,14 @@ export default class ImageOverlayUi {
      * @returns {void}
      */
     setIsLoaded() {
-        this._domAccess.removeClass(this._image, 'loading');
+        this._domAccess.removeClass(this._image, 'qilv_loading');
     }
 
     /**
      * @returns {void}
      */
     setLoading() {
-        this._domAccess.addClass(this._image, 'loading');
+        this._domAccess.addClass(this._image, 'qilv_loading');
     }
 
     /**
@@ -78,14 +78,14 @@ export default class ImageOverlayUi {
      * @returns {void}
      */
     hide() {
-        this._domAccess.removeClass(this._div, 'shown');
+        this._domAccess.removeClass(this._div, 'qilv_shown');
     }
 
     /**
      * @returns {void}
      */
     show() {
-        this._domAccess.addClass(this._div, 'shown');
+        this._domAccess.addClass(this._div, 'qilv_shown');
     }
 
     /**

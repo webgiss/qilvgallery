@@ -394,7 +394,7 @@ export default class GalleryOverlaysUi {
      * @param {boolean} obj.relative
      */
     setRelative({ element, relative }) {
-        this._domAccess.setClass(element, 'relative', relative);
+        this._domAccess.setClass(element, 'qilv_relative', relative);
     }
 
     /**
@@ -404,7 +404,7 @@ export default class GalleryOverlaysUi {
      * @param {boolean} obj.autoX
      */
     setAutoX({ element, autoX }) {
-        this._domAccess.setClass(element, 'autoX', autoX);
+        this._domAccess.setClass(element, 'qilv_autoX', autoX);
     }
 
     /**
@@ -414,7 +414,7 @@ export default class GalleryOverlaysUi {
      * @param {boolean} obj.autoY
      */
     setAutoY({ element, autoY }) {
-        this._domAccess.setClass(element, 'autoY', autoY);
+        this._domAccess.setClass(element, 'qilv_autoY', autoY);
     }
 
     /**
@@ -434,7 +434,7 @@ export default class GalleryOverlaysUi {
      * @param {boolean} obj.centered
      */
     setCentered({ element, centered }) {
-        this._domAccess.setClass(element, 'centered', centered);
+        this._domAccess.setClass(element, 'qilv_centered', centered);
     }
 
     /**
@@ -444,7 +444,7 @@ export default class GalleryOverlaysUi {
      * @param {boolean} obj.maxSize
      */
     setMaxSize({ element, maxSize }) {
-        this._domAccess.setClass(element, 'maxSize', maxSize);
+        this._domAccess.setClass(element, 'qilv_maxSize', maxSize);
     }
 
 
@@ -455,7 +455,7 @@ export default class GalleryOverlaysUi {
      * @param {boolean} obj.shown
      */
     setShown({ element, shown }) {
-        this._domAccess.setClass(element, 'shown', shown);
+        this._domAccess.setClass(element, 'qilv_shown', shown);
     }
 
     /**
@@ -486,12 +486,12 @@ export default class GalleryOverlaysUi {
                 right: 0 !important;
             }
 
-            #qilvgallery_viewer.shown {
+            #qilvgallery_viewer.qilv_shown {
                 z-index: 50001 !important;
                 display: block !important;
             }
 
-            #qilvgallery_viewer.relative {
+            #qilvgallery_viewer.qilv_relative {
                 position: fixed !important;
             }
 
@@ -649,7 +649,7 @@ export default class GalleryOverlaysUi {
             }
 
 
-            .qilvgallery_image_outter.shown {
+            .qilvgallery_image_outter.qilv_shown {
                 opacity: 1 !important;
                 display: block !important;
             }
@@ -673,24 +673,24 @@ export default class GalleryOverlaysUi {
                 max-height: unset !important;
             }
 
-            .maxSize .qilvgallery_image {
+            .qilv_maxSize .qilvgallery_image {
                 max-width: 100% !important;
                 max-height: 100% !important;
             }
 
-            .autoX .qilvgallery_image {
+            .qilv_autoX .qilvgallery_image {
                 width: 100% !important;
             }
 
-            .autoY .qilvgallery_image {
+            .qilv_autoY .qilvgallery_image {
                 height: 100% !important;
             }
 
-            .qilvgallery_image.loading {
+            .qilvgallery_image.qilv_loading {
                 border: 2px solid red !important;
             }
             
-            .centered .qilvgallery_image {
+            .qilv_centered .qilvgallery_image {
                 right: 0 !important;
                 bottom: 0 !important;
                 margin: auto !important;

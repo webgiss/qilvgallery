@@ -12,13 +12,23 @@ export default class ConfigurationUi {
     }
 
     /**
+     * @param {Object} params
+     * @param {string} params.version
      * @returns {HTMLElement}
      */
-    createInfoPanel() {
+    createInfoPanel({ version }) {
         return this._domAccess.createElement('div', {
             classNames: ['infoPanel'],
             parent: this._rootNode,
-            html: '<p>Set your configuration below and drop the "Gallery" link into your toolbar to install bookmarklet.<br/>Use this bookmarklet on pages containing links to image to generate a gallery slideshow.</p>',
+            content: [
+                this._domAccess.createElement('div', {
+                    html: '<p>Set your configuration below and drop the "Gallery" link into your toolbar to install bookmarklet.<br/>Use this bookmarklet on pages containing links to image to generate a gallery slideshow.</p>',
+                }),
+                this._domAccess.createElement('div', {
+                    html: `Version: ${version}`,
+                }),
+            ],
+
         });
     }
 

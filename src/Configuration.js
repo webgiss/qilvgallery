@@ -1,6 +1,7 @@
 import ConfigurationUi from './ConfigurationUi';
 import VK from './VK';
 import GalleryOverlays from './GalleryOverlays';
+import { version } from './version';
 
 export default class Configuration {
     /**
@@ -24,17 +25,17 @@ export default class Configuration {
      */
     init() {
         this._configurationUi.installCss();
-        this._infoPanel = this._configurationUi.createInfoPanel({});
+        this._infoPanel = this._configurationUi.createInfoPanel({ version });
         this._bookmarkletLink = this._configurationUi.createBookmarkletLink({});
         this._namePanel = this._configurationUi.createNamePanel({
             name: this.getLinkName(),
             onValueChanged: (value) => this.changeName(value),
         });
-        let config = Object.keys(this._defaultKeyBindings).map((key)=>{
+        let config = Object.keys(this._defaultKeyBindings).map((key) => {
             return [key, this._defaultKeyBindings[key]]
         });
         this._keyboardPanel = this._configurationUi.createKeyboardPanel({
-            onNewKey: () => { 
+            onNewKey: () => {
                 this._configurationUi.addNewKeyConfig({ keyboardPanelInfo: this._keyboardPanel });
                 this.updateLink();
             },
@@ -48,12 +49,12 @@ export default class Configuration {
         const configurables = this._galleryOverlays.getConfigurables();
         const properties = {};
         config = [];
-        Object.keys(configurables).forEach((propName)=>{
+        Object.keys(configurables).forEach((propName) => {
             this._defaultValues[propName] = configurables[propName].default;
             properties[propName] = configurables[propName].label;
             config.push([propName, configurables[propName].default]);
         });
-        
+
         this._valuePanel = this._configurationUi.createValuePanel({
             properties,
             config,
@@ -105,8 +106,8 @@ export default class Configuration {
     getCurrentConfig() {
         const currentConfig = {};
 
-        const keyboardConfiguration = this._configurationUi.getKeyboardConguration({ keyboardPanelInfo : this._keyboardPanel });
-        keyboardConfiguration.forEach(([key, action])=>{
+        const keyboardConfiguration = this._configurationUi.getKeyboardConguration({ keyboardPanelInfo: this._keyboardPanel });
+        keyboardConfiguration.forEach(([key, action]) => {
             if (this._defaultKeyBindings[key] !== action && key.length > 0 && action.length > 0) {
                 currentConfig[`VK.${key}`] = `${this._galleryOverlays.__name__}.${action}`;
             }
@@ -117,7 +118,7 @@ export default class Configuration {
                 currentConfig[`QILV.${propName}`] = `${value}`;
             }
         });
-        
+
         return currentConfig;
     }
 

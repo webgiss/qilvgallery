@@ -1,4 +1,5 @@
-import { readyPromise, QILVGalleryInit } from './tools';
+import { readyPromise } from './tools';
+import QILVGalleryInit from './QILVGalleryInit';
 
 (() => {
     readyPromise.then(() => QILVGalleryInit());

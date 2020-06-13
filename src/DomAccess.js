@@ -1,3 +1,5 @@
+import CssFluent from './css/CssFluent';
+
 /**
  * @class Access to the DOM
  */
@@ -35,6 +37,24 @@ export default class DomAccess {
         style.type = 'text/css';
         style.innerHTML = cssText;
         document.getElementsByTagName('head')[0].appendChild(style);
+    }
+
+    /**
+     * @param {Object} obj
+     * @param {boolean} obj.important
+     * @param {boolean} obj.format
+     * @returns {CssFluent}
+     */
+    startFluentCss({ important, format }) {
+        /**
+         * @param {CssFluent} cssFluent 
+         */
+        const onEnd = (cssFluent) => {
+            const css = cssFluent.asCss({ important, format });
+            console.log('css', { css });
+            this.installCss(css)
+        };
+        return new CssFluent({ onEnd });
     }
 
     /**
@@ -83,74 +103,74 @@ export default class DomAccess {
                             element[key] = props[key];
                         });
                     }
-                    break;
+                        break;
                     case 'style': {
                         this.setCssProperties(element, features.style);
                     }
-                    break;
+                        break;
                     case 'id': {
                         element.id = features.id;
                     }
-                    break;
+                        break;
                     case 'className': {
                         element.classList.add(features.className);
                     }
-                    break;
+                        break;
                     case 'classNames': {
                         element.classList.add(...features.classNames);
                     }
-                    break;
+                        break;
                     case 'parent': {
                         const parent = features.parent;
                         if (parent) {
                             parent.appendChild(element);
                         }
                     }
-                    break;
+                        break;
                     case 'html': {
                         this.setHtmlContent(element, features.html);
                     }
-                    break;
+                        break;
                     case 'text': {
                         this.setTextContent(element, features.text);
                     }
-                    break;
+                        break;
                     case 'onClick': {
                         element.addEventListener('click', features.onClick);
                     }
-                    break;
+                        break;
                     case 'onChange': {
                         element.addEventListener('change', (e) => features.onChange(e.target.value));
                     }
-                    break;
+                        break;
                     case 'onInput': {
                         element.addEventListener('input', (e) => features.onInput(e.target.value));
                     }
-                    break;
+                        break;
                     case 'onLoad': {
                         element.addEventListener('load', () => features.onLoad());
                     }
-                    break;
+                        break;
                     case 'content': {
                         const addContent = (content) => {
                             content.forEach((subElement) => {
-                                if (subElement instanceof HTMLElement)  {
+                                if (subElement instanceof HTMLElement) {
                                     element.appendChild(subElement);
-                                } else if (typeof(subElement) === typeof('')) {
+                                } else if (typeof (subElement) === typeof ('')) {
                                     element.appendChild(document.createTextNode(subElement));
-                                } else if (typeof(subElement) === typeof([])) {
+                                } else if (typeof (subElement) === typeof ([])) {
                                     addContent(subElement);
                                 }
                             });
                         };
                         addContent(features.content);
                     }
-                    break;
+                        break;
                     case 'onInstance': {
                         const onInstance = features.onInstance;
                         onInstance(element);
                     }
-                    break;
+                        break;
                 }
             });
         }
@@ -223,7 +243,7 @@ export default class DomAccess {
             } else {
                 element.classList.remove(className);
             }
-            
+
         }
     }
 

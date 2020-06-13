@@ -101,7 +101,7 @@ export default class GalleryOverlaysUi {
     /**
      * @param {Object} obj
      * @param {HTMLElement} obj.parent
-     * @param {Array<string>} obj.hrefs
+     * @param {string[]} obj.hrefs
      * @param {(href: string) => boolean} obj.isCurrent
      * @return {HTMLElement}
      */
@@ -205,7 +205,7 @@ export default class GalleryOverlaysUi {
     /**
      * 
      * @param {Object} obj
-     * @param {Array<string>} obj.hrefs
+     * @param {string[]} obj.hrefs
      * @param {() => {}} obj.onImageLoaded
      * @param {HTMLElement} obj.parent
      */

@@ -84,11 +84,11 @@ export default class VK {
          */
         this._reverseKeysByNumber = {};
         /**
-         * @type {Array<string>}
+         * @type {string[]}
          */
         this.keys = [];
         /**
-         * @type {Array<number>}
+         * @type {number[]}
          */
         this.values = [];
         Object.keys(keys).forEach((key) => {
@@ -152,7 +152,7 @@ export default class VK {
             bindableMethods = {};
         }
         /**
-         * @type {Array<number>}
+         * @type {number[]}
          */
         const bindingToDelete = [];
         Object.keys(this.globalBindings).forEach(/** @param {number} keyValue*/(keyValue) => {

@@ -17,11 +17,11 @@ export default class ImageOverlayUi {
          */
         this._image = null;
 
-        this._div = domAccess.createElement('div', { 
-            parent, 
+        this._div = domAccess.createElement('div', {
+            parent,
             className: 'qilvgallery_image_outter',
             content: [
-                domAccess.createElement('a', { 
+                domAccess.createElement('a', {
                     parent: this._div,
                     onInstance: (element) => this._a = element,
                 })
@@ -59,11 +59,11 @@ export default class ImageOverlayUi {
         }
 
         this._image = this._domAccess.createElement('img', {
-            classNames: [ 'qilvgallery_image' ],
+            classNames: ['qilvgallery_image'],
             parent: this._a,
             onLoad: () => this.setIsLoaded(),
-            attr: { 
-                src: '#' 
+            attr: {
+                src: '#'
             },
         });
 

@@ -87,7 +87,7 @@ export default class Configuration {
             }).join(',')
             }}`;
         const url = `${prefixUrl}gallery.js${suffixUrl}`;
-        const setScript = `fetch('${url}').then(x=>x.blob()).then(x=>x.text()).then(x=>{const s = document.createElement('script'); s.innerText=x; document.body.append(s)});`
+        const setScript = `fetch('${url}?t='+(new Date()).getTime()).then(x=>x.blob()).then(x=>x.text()).then(x=>{const s = document.createElement('script'); s.innerText=x; document.body.append(s)});`
         const bookmarklet = `javascript:if(window.QILVGalleryOverlays){window.QILVGalleryOverlays.current.show();}else{window.QILV_config=${configString};${setScript}}`;
         return bookmarklet;
     }

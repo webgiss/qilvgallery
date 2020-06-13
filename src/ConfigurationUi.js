@@ -266,6 +266,100 @@ export default class ConfigurationUi {
      * @returns {void}
      */
     installCss() {
+        this._domAccess
+            .startFluentCss({ important: true })
+
+            .section()
+            .match('.valuePanel')
+            .match('.keyPanel')
+            .property('width', '100%')
+            .endSection()
+
+            .section()
+            .match('td.key')
+            .match('td.action')
+            .match('td.prop')
+            .match('td.value')
+            .property('width', '50%')
+            .endSection()
+
+            .section()
+            .match('.nameInput')
+            .match('.keyCombo')
+            .match('.actionCombo')
+            .match('.propInput')
+            .match('.valueInput')
+            .property('width', '100%')
+            .property('height', '2em')
+            .endSection()
+
+            .section()
+            .match('.valuesTable')
+            .match('.keysTable')
+            .property('width', '100%')
+            .endSection()
+
+            .section()
+            .match('.namePanel')
+            .match('.infoPanel')
+            .match('.configPanel')
+            .match('.link')
+            .property('display', 'block')
+            .property('width', 'auto')
+            .property('margin-left', '100px')
+            .property('margin-right', '100px')
+            .property('display', 'block')
+            .property('text-align', 'center')
+            .property('font-family', '"Georgia"')
+            .property('padding', '5px 20px')
+            .property('border-radius', '10px')
+            .property('text-decoration', 'none')
+            .endSection()
+
+            .section()
+            .match('.infoPanel')
+            .property('background-color', '#ffffff')
+            .property('border', '2px #c3d9ff solid')
+            .property('padding', '10px')
+            .endSection()
+
+            .section()
+            .match('.configPanel')
+            .property('background-color', '#c3d9ff')
+            .property('border', '#c3d9ff')
+            .property('padding', '10px')
+            .endSection()
+
+            .section()
+            .match('.link')
+            .property('background-color', '#c3d9ff')
+            .property('border', '2px #0000cc solid')
+            .endSection()
+
+            .section()
+            .match('a:visited')
+            .match('a:active')
+            .match('a:link')
+            .match('a')
+            .property('text-decoration', 'none')
+            .property('color', '#0000cc')
+            .endSection()
+
+            .section()
+            .match('.infoPanel')
+            .match('.configPanel')
+            .property('margin-bottom', '10px')
+            .property('margin-top', '10px')
+            .endSection()
+
+            .section()
+            .match('.plusKeyPanel')
+            .property('margin-top', '10px')
+            .endSection()
+
+            .endCss()
+            ;
+        return;
         this._domAccess.installCss(`
 
 

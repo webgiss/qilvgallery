@@ -11,7 +11,7 @@ export default [{
     },
     plugins: [
         resolve(),
-        babel({include:'src/**'}),
+        babel(),
         uglify()
     ]
 },{
@@ -22,7 +22,7 @@ export default [{
     },
     plugins: [
         resolve(),
-        babel({include:'src/**'}),
+        babel(),
         uglify()
     ]
 }];

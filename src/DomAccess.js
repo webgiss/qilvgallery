@@ -1,4 +1,5 @@
 import CssFluent from './css/CssFluent';
+import { ICssFluent } from './css/ICss';
 
 /**
  * @class Access to the DOM
@@ -47,11 +48,10 @@ export default class DomAccess {
      */
     startFluentCss({ important, format }) {
         /**
-         * @param {CssFluent} cssFluent 
+         * @param {ICssFluent} cssFluent
          */
         const onEnd = (cssFluent) => {
             const css = cssFluent.asCss({ important, format });
-            console.log('css', { css });
             this.installCss(css)
         };
         return new CssFluent({ onEnd });

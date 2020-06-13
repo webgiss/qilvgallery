@@ -3,12 +3,13 @@ import ImageOverlay from './ImageOverlay';
 import VK from './VK';
 import GalleryOverlaysUi from './GalleryOverlaysUi';
 import { version } from './version';
+import IBindable from './IBindable';
 
 /**
  * @class
  * @implements {IBindable}
  */
-export default class GalleryOverlays {
+export default class GalleryOverlays extends IBindable {
     /**
      * @param {Object} obj
      * @param {ImageOverlayFactory} obj.imageOverlayFactory
@@ -17,6 +18,7 @@ export default class GalleryOverlays {
      * @param {Object.<string, string>} obj.config
      */
     constructor({ imageOverlayFactory, galleryOverlaysUi, vk, config }) {
+        super();
         this._imageOverlayFactory = imageOverlayFactory;
         this._galleryOverlaysUi = galleryOverlaysUi
         this._vk = vk;

@@ -1,17 +1,24 @@
+import { ICssFluent, ICssSection } from './ICss';
 import CssSection from './CssSection';
-export default class CssFluent {
+
+/**
+ * @class
+ * @implements {ICssFluent}
+ */
+export default class CssFluent extends ICssFluent {
     /**
      * Create a new CssFluent declaration
      * 
      * @param {Object} params
-     * @param {(CssFluent)=>{}} params.onEnd A function to call when the Css declaration has ended
+     * @param {(ICssFluent)=>{}} params.onEnd A function to call when the Css declaration has ended
      * @param {boolean} params.important
      */
     constructor(params) {
+        super();
         params = params || {};
         const { onEnd, important } = params;
         /**
-         * @type {CssSection[]}
+         * @type {ICssSection[]}
          */
         this._sections = [];
         this._important = important || false;
@@ -23,7 +30,7 @@ export default class CssFluent {
      * 
      * @param {Object} params
      * @param {boolean} params.important
-     * @returns {CssSection}
+     * @returns {ICssSection}
      */
     section(params) {
         params = params || {};

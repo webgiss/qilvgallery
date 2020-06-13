@@ -475,6 +475,7 @@ export default class GalleryOverlaysUi {
     installCss() {
         this._domAccess
             .startFluentCss({ important: true })
+
             .section()
             .match('#qilvgallery_viewer')
             .property('position', 'absolute')
@@ -486,15 +487,18 @@ export default class GalleryOverlaysUi {
             .property('left', '0')
             .property('right', '0')
             .endSection()
+
             .section()
             .match('#qilvgallery_viewer.qilv_shown')
             .property('z-index', '50001')
             .property('display', 'block')
             .endSection()
+
             .section()
             .match('#qilvgallery_viewer.qilv_relative')
             .property('position', 'fixed')
             .endSection()
+
             .section()
             .match('.qilvgallery_infotip')
             .property('display', 'block')
@@ -511,10 +515,12 @@ export default class GalleryOverlaysUi {
             .property('border-radius', '5px')
             .property('z-index', '50001')
             .endSection()
+
             .section()
             .match('.qilvgallery_infotip > pre')
             .property('margin', '0')
             .endSection()
+
             .section()
             .match('.qilvgallery_preload_gauge')
             .property('z-index', '50101')
@@ -525,6 +531,7 @@ export default class GalleryOverlaysUi {
             .property('height', '13px')
             .property('background-color', '#eee')
             .endSection()
+
             .section()
             .match('.qilvgallery_preload_gauge_inner')
             .property('z-index', '50102')
@@ -543,6 +550,7 @@ export default class GalleryOverlaysUi {
             .property('font-weight', 'bold')
             .property('color', '#000000')
             .endSection()
+
             .section()
             .match('.qilvgallery_infotip_about_blackscreen')
             .property('z-index', '50098')
@@ -554,10 +562,12 @@ export default class GalleryOverlaysUi {
             .property('background', 'black')
             .property('opacity', '0.8')
             .endSection()
+
             .section()
             .match('.qilvgallery_infotip_about_title')
             .property('font-size', '20pt')
             .endSection()
+
             .section()
             .match('.qilvgallery_infotip_about_button')
             .property('width', '20em')
@@ -569,6 +579,7 @@ export default class GalleryOverlaysUi {
             .property('right', '0px')
             .property('margin', '100px auto auto')
             .endSection()
+
             .section()
             .match('.qilvgallery_infotip_center')
             .property('position', 'fixed')
@@ -578,6 +589,7 @@ export default class GalleryOverlaysUi {
             .property('bottom', '0')
             .property('margin', 'auto')
             .endSection()
+
             .section()
             .match('.qilvgallery_infotip_about')
             .property('font-family', '"Trebuchet MS","Tahoma","Verdana","Arial","sans-serif"')
@@ -589,6 +601,7 @@ export default class GalleryOverlaysUi {
             .property('background', 'linear-gradient(180deg, #f8f8f8, #dddddd)')
             .property('z-index', '50100')
             .endSection()
+
             .section()
             .match('.qilvgallery_infotip_help')
             .property('display', 'block')
@@ -604,25 +617,30 @@ export default class GalleryOverlaysUi {
             .property('border-radius', '5px')
             .property('z-index', '50001')
             .endSection()
+
             .section()
             .match('.qilvgallery_infotip_help_title')
             .property('font-size', '2em')
             .property('font-weight', 'bold')
             .endSection()
+
             .section()
             .match('.qilvgallery_infotip_help_content')
             .property('margin-left', '10px')
             .endSection()
+
             .section()
             .match('.qilvgallery_infobox_textarea')
             .property('white-space', 'pre')
             .endSection()
+
             .section()
             .match('.qilvgallery_about_infobox')
             .property('margin', '0')
             .property('padding', '0')
             .property('border', '0')
             .endSection()
+
             .section()
             .match('.qilvgallery_image_outter')
             .property('margin', '0')
@@ -638,23 +656,28 @@ export default class GalleryOverlaysUi {
             .property('transition', 'opacity ease-out')
             .property('transition-duration', '0s')
             .endSection()
+
             .section()
             .match('.qilv_transition-300 .qilvgallery_image_outter')
             .property('transition-duration', '0.3s')
             .endSection()
+
             .section()
             .match('.qilv_transition-800 .qilvgallery_image_outter')
             .property('transition-duration', '0.8s')
             .endSection()
+
             .section()
             .match('.qilv_transition-1500 .qilvgallery_image_outter')
             .property('transition-duration', '1.5s')
             .endSection()
+
             .section()
             .match('.qilvgallery_image_outter.qilv_shown')
             .property('opacity', '1')
             .property('display', 'block')
             .endSection()
+
             .section()
             .match('.qilvgallery_image')
             .property('margin', 'unset')
@@ -673,33 +696,40 @@ export default class GalleryOverlaysUi {
             .property('max-width', 'unset')
             .property('max-height', 'unset')
             .endSection()
+
             .section()
             .match('.qilv_maxSize .qilvgallery_image')
             .property('max-width', '100%')
             .property('max-height', '100%')
             .endSection()
+
             .section()
             .match('.qilv_autoX .qilvgallery_image')
             .property('width', '100%')
             .endSection()
+
             .section()
             .match('.qilv_autoY .qilvgallery_image')
             .property('height', '100%')
             .endSection()
+
             .section()
             .match('.qilvgallery_image.qilv_loading')
             .property('border', '2px solid red')
             .endSection()
+
             .section()
             .match('.qilv_centered .qilvgallery_image')
             .property('right', '0')
             .property('bottom', '0')
             .property('margin', 'auto')
             .endSection()
+
             .section()
             .match('#qilvgallery_preload_all_panel')
             .property('display', 'none')
             .endSection()
+
             .section()
             .match('#qilvgallery_black_screen')
             .property('z-index', '499998')
@@ -711,6 +741,7 @@ export default class GalleryOverlaysUi {
             .property('margin', '0')
             .property('padding', '0')
             .endSection()
+
             .endCss()
             ;
 

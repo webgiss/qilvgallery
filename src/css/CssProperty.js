@@ -1,6 +1,6 @@
-import CssSection from './CssSection';
+import { ICssSection, ICssProperty } from './ICss';
 
-export default class CssProperty {
+export default class CssProperty extends ICssProperty {
     /**
      * Create a CssProperty
      * 
@@ -8,9 +8,10 @@ export default class CssProperty {
      * @param {string} params.name
      * @param {string} params.value 
      * @param {boolean} params.important
-     * @param {CssSection} params.parent 
+     * @param {ICssSection} params.parent 
      */
     constructor(params) {
+        super();
         params = params || {};
         const { name, value, important, parent } = params;
         this._name = name;

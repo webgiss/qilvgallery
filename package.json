@@ -1,6 +1,6 @@
 {
   "name": "qilvgallery",
-  "version": "3.0.8",
+  "version": "3.0.9",
   "description": "Make a gallery from a web page",
   "main": "dist/index.js",
   "repository": "https://github.com/gissehel/qilvgallery.git",

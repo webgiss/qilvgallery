@@ -248,7 +248,7 @@ export default class GalleryOverlaysUi {
      */
     createAboutInfoBox({ parent, onClick, version }) {
         const domAccess = this._domAccess;
-        const url = 'https://github.com/gissehel/qilvgallery';
+        const url = 'https://github.com/webgiss/qilvgallery';
         return domAccess.createElement('div', {
             parent,
             className: 'qilvgallery_about_infobox',

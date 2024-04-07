@@ -22,9 +22,10 @@ export default class DomAccess {
      * @param {Object.<string, string>} properties
      */
     setCssProperties(element, properties) {
+        const self = this;
         if (element) {
             Object.keys(properties).forEach((property) => {
-                this.setCssProperty(element, property, properties[property]);
+                self.setCssProperty(element, property, properties[property]);
             })
         }
     }
@@ -50,9 +51,10 @@ export default class DomAccess {
         /**
          * @param {ICssFluent} cssFluent
          */
+        const self = this;
         const onEnd = (cssFluent) => {
             const css = cssFluent.asCss({ important, format });
-            this.installCss(css)
+            self.installCss(css)
         };
         return new CssFluent({ onEnd });
     }
@@ -93,6 +95,7 @@ export default class DomAccess {
      */
     createElement(name, features) {
         const element = document.createElement(name);
+        const self = this;
 
         if (features) {
             Object.keys(features).forEach((feature) => {
@@ -105,7 +108,7 @@ export default class DomAccess {
                     }
                         break;
                     case 'style': {
-                        this.setCssProperties(element, features.style);
+                        self.setCssProperties(element, features.style);
                     }
                         break;
                     case 'id': {
@@ -128,11 +131,11 @@ export default class DomAccess {
                     }
                         break;
                     case 'html': {
-                        this.setHtmlContent(element, features.html);
+                        self.setHtmlContent(element, features.html);
                     }
                         break;
                     case 'text': {
-                        this.setTextContent(element, features.text);
+                        self.setTextContent(element, features.text);
                     }
                         break;
                     case 'onClick': {

@@ -768,8 +768,7 @@ export default class GalleryOverlays extends IBindable {
         this._links = {};
 
         this.reload();
-
-        this.goNum(0);
+        
         this._vk.auto_bind(this);
 
         Object.keys(this._configurables).forEach((keyName) => {
@@ -856,6 +855,8 @@ export default class GalleryOverlays extends IBindable {
             this.slideshowMode = false;
             this.blackScreenMode = false;
             return;
+        } else {
+            this.goNum(0);            
         }
     }
 

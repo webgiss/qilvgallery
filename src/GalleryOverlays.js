@@ -762,8 +762,6 @@ export default class GalleryOverlays extends IBindable {
         this._current = this._imageOverlayFactory.createImageOverylay(this._viewer);
         this._next = this._imageOverlayFactory.createImageOverylay(this._viewer);
 
-        let previousHref = null;
-
         /**
          * @type {Object.<string, {id: string, prevId: number, nextId: number, href: string}>}
          */
@@ -810,6 +808,8 @@ export default class GalleryOverlays extends IBindable {
      * @returns {void}
      */
     reload() {
+        let previousHref = null;
+
         Object.values(this._links).forEach(({ id, prevId, nextId, href, element }) => { 
             this._galleryOverlaysUi.cleanImageRef({ element, id });
         });

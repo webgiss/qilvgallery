@@ -26,6 +26,7 @@ export default QILVGalleryInit = () => {
         window.QILVGalleryOverlays = galleryOverlays;
         galleryOverlays.init();
     } else {
+        window.QILVGalleryOverlays.reload();
         window.QILVGalleryOverlays.shown = true;
     }
 }

@@ -58,6 +58,7 @@ export default class GalleryOverlays extends IBindable {
             "toggleBlackScreen": "Set or remove the black screen",
             "cycleTransitionTime": "Change transition's effect's time",
             "preloadAll": "Pre-load all images (may take some resources)",
+            "reload": "Reload images (after changes in page content)",
             "about": "Show/Hide about box",
             "help": "Show/Hide help box",
         };
@@ -84,6 +85,7 @@ export default class GalleryOverlays extends IBindable {
             B: "toggleBlackScreen",
             T: "cycleTransitionTime",
             P: "preloadAll",
+            E: "reload",
             NUMPAD_MULTIPLY: "help",
             NUMPAD_DIVIDE: "about"
         };
@@ -762,47 +764,12 @@ export default class GalleryOverlays extends IBindable {
 
         let previousHref = null;
 
-        const linkList = this._galleryOverlaysUi.getLinkRefs().filter((linkRef) => {
-            const { href } = linkRef;
-            let ok = false;
-            if (href) {
-                [".png", ".gif", ".jpg", ".jpeg"].map((extension) => {
-                    if (href.indexOf("?") === -1) {
-                        if (href.substr(href.length - extension.length, extension.length).toLowerCase() === extension) {
-                            if (href !== previousHref) {
-                                ok = true;
-                            }
-                        }
-                    }
-                });
-            }
-            if (ok) {
-                previousHref = href;
-            }
-            return ok;
-        })
-
         /**
          * @type {Object.<string, {id: string, prevId: number, nextId: number, href: string}>}
          */
         this._links = {};
 
-        linkList.forEach(({ element, href }, index) => {
-            const id = `${index}`;
-            this._galleryOverlaysUi.setImageRef({ element, id });
-
-            const prevId = index === 0 ? linkList.length - 1 : index - 1;
-            const nextId = index === linkList.length - 1 ? 0 : index + 1;
-
-            this._links[id] = { id, prevId, nextId, href };
-        });
-
-        if (linkList.length == 0) {
-            this._galleryOverlaysUi.createTempMessage('No links to image found in this page !', document.body);
-            this.slideshowMode = false;
-            this.blackScreenMode = false;
-            return;
-        }
+        this.reload();
 
         this.goNum(0);
         this._vk.auto_bind(this);
@@ -837,6 +804,54 @@ export default class GalleryOverlays extends IBindable {
         this.slideshowMode = this._slideshowMode;
         this.setSlideshowSpeed(this._slideshowSpeed, true);
         this.shown = this._shown;
+    }
+
+    /**
+     * @returns {void}
+     */
+    reload() {
+        Object.values(this._links).forEach(({ id, prevId, nextId, href, element }) => { 
+            this._galleryOverlaysUi.cleanImageRef({ element, id });
+        });
+
+        this._links = {};
+
+        const linkList = this._galleryOverlaysUi.getLinkRefs().filter((linkRef) => {
+            const { href } = linkRef;
+            let ok = false;
+            if (href) {
+                [".png", ".gif", ".jpg", ".jpeg"].map((extension) => {
+                    if (href.indexOf("?") === -1) {
+                        if (href.substr(href.length - extension.length, extension.length).toLowerCase() === extension) {
+                            if (href !== previousHref) {
+                                ok = true;
+                            }
+                        }
+                    }
+                });
+            }
+            if (ok) {
+                previousHref = href;
+            }
+            return ok;
+        })
+
+        linkList.forEach(({ element, href }, index) => {
+            const id = `${index}`;
+            this._galleryOverlaysUi.setImageRef({ element, id });
+
+            const prevId = index === 0 ? linkList.length - 1 : index - 1;
+            const nextId = index === linkList.length - 1 ? 0 : index + 1;
+
+            this._links[id] = { id, prevId, nextId, href, element };
+        });
+
+        if (linkList.length == 0) {
+            this._galleryOverlaysUi.createTempMessage('No links to image found in this page !', document.body);
+            this.slideshowMode = false;
+            this.blackScreenMode = false;
+            return;
+        }
     }
 
     /**

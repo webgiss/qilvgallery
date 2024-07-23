@@ -386,6 +386,17 @@ export default class GalleryOverlaysUi {
         this._domAccess.addClass(element, `qilvgallery_source_image_${id}`);
     }
 
+    /**
+     * 
+     * @param {Object} obj
+     * @param {HTMLElement}  obj.element
+     * @param {string}  obj.id
+     * @returns {void}
+     */
+    cleanImageRef({ element, id }) {
+        this._domAccess.removeClass(element, 'qilvgallery_source_image');
+        this._domAccess.removeClass(element, `qilvgallery_source_image_${id}`);
+    }
 
     /**
      * 

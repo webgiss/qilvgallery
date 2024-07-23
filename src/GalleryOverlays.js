@@ -817,7 +817,7 @@ export default class GalleryOverlays extends IBindable {
         this._links = {};
 
         const linkList = this._galleryOverlaysUi.getLinkRefs().filter((linkRef) => {
-            const { href } = linkRef;
+            const { href, element } = linkRef;
             let ok = false;
             if (href) {
                 [".png", ".gif", ".jpg", ".jpeg"].map((extension) => {
@@ -829,6 +829,11 @@ export default class GalleryOverlays extends IBindable {
                         }
                     }
                 });
+            }
+            if (element && element.parentElement) {
+                id (element.parentElement.classList.contains('qilvgallery_image_outter')) {
+                    ok = false;
+                }
             }
             if (ok) {
                 previousHref = href;

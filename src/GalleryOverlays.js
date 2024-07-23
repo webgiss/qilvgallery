@@ -831,7 +831,7 @@ export default class GalleryOverlays extends IBindable {
                 });
             }
             if (element && element.parentElement) {
-                id (element.parentElement.classList.contains('qilvgallery_image_outter')) {
+                if (element.parentElement.classList.contains('qilvgallery_image_outter')) {
                     ok = false;
                 }
             }

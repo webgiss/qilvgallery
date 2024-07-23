@@ -72,6 +72,7 @@ export default class ImageOverlayUi {
 
         this._a.href = href;
         this._a.target = '_blank';
+        this._a.download = href.split('/').reduce((a,e)=>e);
     }
 
     /**

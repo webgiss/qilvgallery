@@ -227,6 +227,16 @@ export default class GalleryOverlaysUi {
         }
     }
 
+    /**
+     */
+    resetImageList() {
+        if (this._preloadAllPanel) {
+            const domAccess = this._domAccess;
+            domAccess.remove(this._preloadAllPanel);
+        }
+        this._preloadAllPanel = null;
+    }
+
 
 
     /**

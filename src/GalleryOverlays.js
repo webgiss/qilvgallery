@@ -814,6 +814,7 @@ export default class GalleryOverlays extends IBindable {
         });
 
         this._links = {};
+        this._galleryOverlaysUi.resetImageList();
 
         const linkList = this._galleryOverlaysUi.getLinkRefs().filter((linkRef) => {
             const { href, element } = linkRef;
@@ -856,7 +857,10 @@ export default class GalleryOverlays extends IBindable {
             this.blackScreenMode = false;
             return;
         } else {
-            this.goNum(0);            
+            this.goNum(0);
+            if (this.preloadAllMode) {
+                this.preloadAll()
+            }
         }
     }
 

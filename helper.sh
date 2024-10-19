@@ -25,6 +25,3 @@ if [ "${action}" == "dev" ]
 then
     git checkout -- src/version.js
 fi
-
-
-

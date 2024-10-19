@@ -4,7 +4,6 @@ import VK from './VK';
 import GalleryOverlaysUi from './GalleryOverlaysUi';
 import { version } from './version';
 import IBindable from './IBindable';
-import { downloadUrl } from './utils';
 
 /**
  * @class
@@ -18,13 +17,14 @@ export default class GalleryOverlays extends IBindable {
      * @param {VK} obj.vk
      * @param {Object.<string, string>} obj.config
      */
-    constructor({ imageOverlayFactory, galleryOverlaysUi, vk, config }) {
+    constructor({ imageOverlayFactory, galleryOverlaysUi, vk, config, streamAccess }) {
         super();
         this._imageOverlayFactory = imageOverlayFactory;
         this._galleryOverlaysUi = galleryOverlaysUi
         this._vk = vk;
         this._config = config;
         this._preloadGaugeInfo = null;
+        this._streamAccess = streamAccess;
 
         /**
          * @type {Object.<string, {label: string, default: string}>}
@@ -628,14 +628,14 @@ export default class GalleryOverlays extends IBindable {
      * @returns {void}
      */
     downloadLink() {
-        downloadUrl(this._current.imageSource);
+        this._streamAccess.downloadUrl(this._current.imageSource);
     }
 
     /**
      * @returns {void}
      */
     downloadAllLinks() {
-        Object.values(this._links).forEach(({ href }) => downloadUrl(href));
+        Object.values(this._links).forEach(({ href }) => this._streamAccess.downloadUrl(href));
     }
 
     /**

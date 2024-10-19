@@ -3,6 +3,7 @@ import ImageOverlayFactory from './ImageOverlayFactory';
 import GalleryOverlaysUi from './GalleryOverlaysUi';
 import VK from './VK';
 import GalleryOverlays from './GalleryOverlays';
+import StreamAccess from './StreamAccess';
 
 /**
  * Initialise QILVGallery_init
@@ -17,11 +18,13 @@ export default QILVGalleryInit = () => {
         const imageOverlayFactory = new ImageOverlayFactory({ domAccess });
         const galleryOverlaysUi = new GalleryOverlaysUi({ domAccess });
         const vk = new VK({ config });
+        const streamAccess = new StreamAccess();
         const galleryOverlays = new GalleryOverlays({
             imageOverlayFactory,
             galleryOverlaysUi,
             vk,
             config,
+            streamAccess,
         });
         window.QILVGalleryOverlays = galleryOverlays;
         galleryOverlays.init();

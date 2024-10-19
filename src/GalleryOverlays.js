@@ -4,6 +4,7 @@ import VK from './VK';
 import GalleryOverlaysUi from './GalleryOverlaysUi';
 import { version } from './version';
 import IBindable from './IBindable';
+import { downloadUrl } from './utils';
 
 /**
  * @class
@@ -74,6 +75,8 @@ export default class GalleryOverlays extends IBindable {
             I: "toggleInfoBox",
             H: "toggle",
             L: "openLink",
+            D: "downloadLink",
+            W: "downloadAllLinks",
             S: "toggleSlideshow",
             R: "togglePosition",
             NUMPAD_ADD: "speedUpSlideshow",
@@ -619,6 +622,20 @@ export default class GalleryOverlays extends IBindable {
      */
     openLink() {
         window.open(this._current.imageSource);
+    }
+
+    /**
+     * @returns {void}
+     */
+    downloadLink() {
+        downloadUrl(this._current.imageSource);
+    }
+
+    /**
+     * @returns {void}
+     */
+    downloadAllLinks() {
+        Object.values(this._links).forEach(({ href }) => downloadUrl(href));
     }
 
     /**

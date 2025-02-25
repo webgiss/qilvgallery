@@ -838,7 +838,7 @@ export default class GalleryOverlays extends IBindable {
             let ok = false;
             if (href) {
                 [".png", ".gif", ".jpg", ".jpeg"].map((extension) => {
-                    if (href.indexOf("?") === -1) {
+                    if (href.indexOf("?") === -1 && href.indexOf("/http://") === -1 && href.indexOf("/http://") === -1) {
                         if (href.substring(href.length - extension.length).toLowerCase() === extension) {
                             if (href !== previousHref) {
                                 ok = true;
